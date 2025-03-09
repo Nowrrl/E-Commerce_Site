@@ -23,9 +23,11 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
-                <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Welcome Back</h2>
+        <div className="flex border-t-4 border-white  items-center justify-center min-h-screen w-full bg-gradient-to-b from-black to-purple-600">
+            <div className="backdrop-blur-lg bg-white/10 p-8 rounded-2xl shadow-lg shadow-black/40 w-96 border border-white/20">
+
+                <h2 className="text-2xl font-bold text-center text-white mb-6">Welcome Back</h2>
+                
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         type="text"
@@ -33,7 +35,7 @@ const Login = () => {
                         placeholder="Username"
                         onChange={handleChange}
                         required
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
                     />
                     <input
                         type="password"
@@ -41,17 +43,21 @@ const Login = () => {
                         placeholder="Password"
                         onChange={handleChange}
                         required
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
                     />
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
+                        className="w-1/2 mt-2 mx-auto block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
                     >
                         Login
                     </button>
                 </form>
-                <p className="text-center text-gray-600 mt-4">Don't have an account?
-                    <a href="/register" className="text-blue-500 hover:underline">Sign Up</a>
+
+                <p className="text-center text-white mt-4">
+                    Don't have an account?{" "}
+                    <a href="/register" className="text-blue-300 hover:underline">
+                        Sign Up
+                    </a>
                 </p>
             </div>
         </div>
