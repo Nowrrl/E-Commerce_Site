@@ -23,7 +23,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex border-t-4 border-white  items-center justify-center min-h-screen w-full bg-gradient-to-b from-black to-purple-600">
+        <div className="flex border-t-1 border-white items-center justify-center min-h-screen w-full bg-gradient-to-b from-black to-purple-900">
             <div className="backdrop-blur-lg bg-white/10 p-8 rounded-2xl shadow-lg shadow-black/40 w-96 border border-white/20">
 
                 <h2 className="text-2xl font-bold text-center text-white mb-6">Welcome Back</h2>
@@ -47,7 +47,7 @@ const Login = () => {
                     />
                     <button
                         type="submit"
-                        className="w-1/2 mt-2 mx-auto block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
+                        className="w-1/2 mt-2 mx-auto block bg-purple-800 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
                     >
                         Login
                     </button>
