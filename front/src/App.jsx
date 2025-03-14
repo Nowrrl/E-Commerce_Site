@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import Home from "./pages/Home";
+import ProductDetails from "./pages/productdetails.jsx";
 
 function App() {
     return (
@@ -20,6 +22,7 @@ function App() {
 
             {/* Page Content */}
             <Routes>
+                <Route path='/' element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/" element={
@@ -28,6 +31,7 @@ function App() {
                         <p className="text-gray-600">Please <Link to="/login" className="font-bold hover:underline">Login</Link> or  <Link to="/register" className="font-bold hover:underline">Register</Link> to continue.</p>
                     </div>
                 } />
+                <Route path="/detail" element={<ProductDetails />} />
             </Routes>
         </Router>
     );
