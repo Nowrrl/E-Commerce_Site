@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import BannerCarousel from "../components/BannerCarousel";
+import puzzleImage from "../img/puzzle.jpeg";
+import vacuumCleanerImage from "../img/vacuumcleaner.jpeg";
+import disneyImage from "../img/disney.jpeg";
+import stormImage from "../img/stormtrooper.jpeg";
+
+
+
 
 const categories = [
   { name: "Smartfon və aksesuarlar", icon: "📱" },
@@ -33,25 +40,25 @@ const newProducts = [
         name: "Puzzle Assassin's Creed Valhalla",
         price: 39,
         oldPrice: 49,
-        image: "puzzle_ac_valhalla.png",
+        image: puzzleImage,
       },
       {
         name: "Beko B50 C 890 A TV & Vacuum Cleaner",
         price: 1115,
         oldPrice: 1200,
-        image: "beko_tv_vacuum.png",
+        image: vacuumCleanerImage,
       },
       {
         name: "Funko-POP Disney: Donald Duck",
         price: 39,
         oldPrice: 59,
-        image: "funko_donald_duck.png",
+        image: disneyImage,
       },
       {
         name: "Funko-POP Star Wars: Stormtrooper",
         price: 39,
         oldPrice: 59,
-        image: "funko_stormtrooper.png",
+        image: stormImage,
       },
     ],
   },
@@ -89,34 +96,74 @@ const Banner = () => (
 );
 
 const ProductCard = ({ product }) => (
-  <div className="border p-4 rounded-lg shadow-md w-72">
-    <img src={product.image} alt={product.name} className="w-full h-40 object-cover" />
-    <h3 className="font-semibold mt-2">{product.name}</h3>
-    <p className="text-lg font-bold text-red-500">{product.price} AZN</p>
-    <p className="text-gray-500 line-through">{product.oldPrice} AZN</p>
-    <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg">Bir kliklə al</button>
+  <div className="border p-4 rounded-2xl shadow-lg w-72 bg-white transition-transform transform hover:scale-105 hover:shadow-xl">
+    <div className="relative w-full h-44">
+      <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded-xl" />
+      {product.oldPrice && (
+        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-lg">
+          Endirim!
+        </span>
+      )}
+    </div>
+    <h3 className="font-semibold mt-3 text-gray-800 text-lg">{product.name}</h3>
+    <p className="text-xl font-bold text-red-500 mt-1">{product.price} AZN</p>
+    {product.oldPrice && <p className="text-gray-400 line-through text-sm">{product.oldPrice} AZN</p>}
+    <button className="mt-4 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-lg text-lg font-semibold transition hover:opacity-90">
+      Bir kliklə al
+    </button>
   </div>
 );
 
 const NewProductsSection = () => {
   const [activeTab, setActiveTab] = useState("Yeni Məhsullar");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://localhost:8085/products");
+        if (!response.ok) {
+          throw new Error("Məhsulları yükləmək alınmadı");
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) return <p className="text-center text-gray-600">Yüklənir...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+
   return (
-    <div className="mt-8 p-10">
-      <div className="flex space-x-6 border-b pb-2">
+    <div className="mt-8 p-10 bg-gray-100 rounded-xl">
+      <div className="flex space-x-6 border-b pb-3">
         {["Yeni Məhsullar", "Ən çox satılan", "Outlet", "Kampaniyalar"].map((tab) => (
           <button
             key={tab}
-            className={`text-lg font-bold ${activeTab === tab ? "text-black" : "text-gray-400"}`}
+            className={`text-lg font-bold pb-2 transition ${
+              activeTab === tab ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"
+            }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab}
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-4 gap-6 mt-4">
-        {newProducts.find((section) => section.category === activeTab)?.items.map((product, index) => (
-          <ProductCard key={index} product={product} />
-        ))}
+
+      <div className="grid grid-cols-4 gap-6 mt-6">
+        {products
+          .filter((product) => product.category === activeTab)
+          .map((product, index) => (
+            <ProductCard key={index} product={product} />
+          ))}
       </div>
     </div>
   );
@@ -124,8 +171,8 @@ const NewProductsSection = () => {
 
 const Home = () => {
   return (
-    <>
-    <div className="flex">
+    <div className="p-10 bg-gradient-to-b from-black to-purple-900">
+    <div className="flex ">
       <Sidebar />
       <div className="flex-1 p-8">
         <BannerCarousel />
@@ -138,7 +185,7 @@ const Home = () => {
       </div>
     </div>
     <NewProductsSection />
-    </>
+    </div>
   );
 };
 
