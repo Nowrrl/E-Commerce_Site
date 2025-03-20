@@ -110,7 +110,7 @@ const NewProductsSection = () => {
 
 const Home = () => {
     return (
-        <div className="p-10 bg-gradient-to-b from-black to-purple-900">
+        <div className="border-t-1 border-white p-10 bg-gradient-to-b from-black to-purple-900">
             <div className="flex">
                 <Sidebar />
                 <div className="flex-1 p-8">

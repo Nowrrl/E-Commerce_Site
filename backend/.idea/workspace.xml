@@ -5,26 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/corsconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/corsconfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/Cs308ProjectApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/Cs308ProjectApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/controller/user_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/controller/user_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/login_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/login_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/register_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/register_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/workers_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/workers_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/login_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/login_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/register_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/register_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/workers_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/workers_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/login_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/login_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/register_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/register_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/workers_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/workers_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/controller/product_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/controller/product_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/model/product_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/model/product_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/repository/product_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/repository/product_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/service/product_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/service/product_service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/model/login_model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/model/login_model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/ProductDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/ProductDetails.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,31 +38,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.Cs308ProjectApplication.executor": "Run",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/rasul/IdeaProjects/CS308Project_1/backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.Cs308ProjectApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/rasul/IdeaProjects/CS308Project_1/backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="backend" />
@@ -119,6 +103,7 @@
       <workItem from="1741529539316" duration="358000" />
       <workItem from="1741529904282" duration="24000" />
       <workItem from="1741529932903" duration="7908000" />
+      <workItem from="1742501427008" duration="648000" />
     </task>
     <servers />
   </component>
