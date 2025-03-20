@@ -5,86 +5,48 @@ import vacuumCleanerImage from "../img/vacuumcleaner.jpeg";
 import disneyImage from "../img/disney.jpeg";
 import stormImage from "../img/stormtrooper.jpeg";
 
-
-
-
 const categories = [
-  { name: "Smartfon və aksesuarlar", icon: "📱" },
-  { name: "Böyük Məişət texnikası", icon: "🛒" },
-  { name: "Kiçik Məişət Texnikası", icon: "☕" },
-  { name: "TV, Audio, Foto texnika", icon: "📺", active: true },
-  { name: "Smart saat və Qulaqlıqlar", icon: "⌚" },
-  { name: "Kompüter və Ofis avadanlıqları", icon: "💻" },
-  { name: "Mebel və Tekstil", icon: "🛋" },
-  { name: "İkinci əl məhsullar", icon: "🔄" },
-  { name: "Oyun konsolları və aksesuarları", icon: "🎮" },
-  { name: "Şəxsi qulluq və Gözəllik", icon: "💄" },
-  { name: "Ev və mətbəx əşyaları", icon: "🏠" },
-];
-
-const products = [
-  {
-    name: "Apple iPhone 16 Pro Max 256GB Black Titanium",
-    price: 3349,
-    oldPrice: 3699,
-    offer: "AirPods 2 HƏDİYYƏ!",
-    image: "iphone_16_pro_max.png",
-  },
+  { name: "Smartfon və aksesuarlar", icon: "\ud83d\udcf1" },
+  { name: "Böyük Məişət texnikası", icon: "\ud83d\udecf" },
+  { name: "Kiçik Məişət Texnikası", icon: "\u2615" },
+  { name: "TV, Audio, Foto texnika", icon: "\ud83d\udcfa", active: true },
+  { name: "Smart saat və Qulaqlıqlar", icon: "\u231a" },
+  { name: "Kompüter və Ofis avadanlıqları", icon: "\ud83d\udcbb" },
+  { name: "Mebel və Tekstil", icon: "\ud83d\udecb" },
+  { name: "İkinci əl məhsullar", icon: "\ud83d\udd04" },
+  { name: "Oyun konsolları və aksesuarları", icon: "\ud83c\udfae" },
+  { name: "Şəxsi qulluq və Gözəllik", icon: "\ud83d\udc84" },
+  { name: "Ev və mətbəx əşyaları", icon: "\ud83c\udfe0" },
 ];
 
 const newProducts = [
   {
     category: "Yeni Məhsullar",
     items: [
-      {
-        name: "Puzzle Assassin's Creed Valhalla",
-        price: 39,
-        oldPrice: 49,
-        image: puzzleImage,
-      },
-      {
-        name: "Beko B50 C 890 A TV & Vacuum Cleaner",
-        price: 1115,
-        oldPrice: 1200,
-        image: vacuumCleanerImage,
-      },
-      {
-        name: "Funko-POP Disney: Donald Duck",
-        price: 39,
-        oldPrice: 59,
-        image: disneyImage,
-      },
-      {
-        name: "Funko-POP Star Wars: Stormtrooper",
-        price: 39,
-        oldPrice: 59,
-        image: stormImage,
-      },
+      { name: "Puzzle Assassin's Creed Valhalla", price: 39, oldPrice: 49, image: puzzleImage },
+      { name: "Beko B50 C 890 A TV & Vacuum Cleaner", price: 1115, oldPrice: 1200, image: vacuumCleanerImage },
+      { name: "Funko-POP Disney: Donald Duck", price: 39, oldPrice: 59, image: disneyImage },
+      { name: "Funko-POP Star Wars: Stormtrooper", price: 39, oldPrice: 59, image: stormImage },
     ],
   },
 ];
 
 const Sidebar = () => (
-    <aside className="w-80  bg-white p-4 shadow-md rounded-lg">
-      <ul className="space-y-2 m-5">
-        {categories.map((cat, index) => (
-          <li
-            key={index}
-            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all 
-              ${
-                cat.active
-                  ? "bg-blue-100 text-blue-600 font-semibold"
-                  : "hover:bg-gray-200"
-              }`}
-          >
-            <span className="text-lg">{cat.icon}</span>
-            <span className="text-sm">{cat.name}</span>
-          </li>
-        ))}
-      </ul>
-    </aside>
-  );
-  
+  <aside className="w-80 bg-white p-4 shadow-md rounded-lg">
+    <ul className="space-y-2 m-5">
+      {categories.map((cat, index) => (
+        <li
+          key={index}
+          className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all 
+            ${cat.active ? "bg-blue-100 text-blue-600 font-semibold" : "hover:bg-gray-200"}`}
+        >
+          <span className="text-lg">{cat.icon}</span>
+          <span className="text-sm">{cat.name}</span>
+        </li>
+      ))}
+    </ul>
+  </aside>
+);
 
 const Banner = () => (
   <div className="flex-1 bg-gray-200 p-8 text-center">
@@ -116,31 +78,6 @@ const ProductCard = ({ product }) => (
 
 const NewProductsSection = () => {
   const [activeTab, setActiveTab] = useState("Yeni Məhsullar");
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("https://localhost:8085/products");
-        if (!response.ok) {
-          throw new Error("Məhsulları yükləmək alınmadı");
-        }
-        const data = await response.json();
-        setProducts(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (loading) return <p className="text-center text-gray-600">Yüklənir...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <div className="mt-8 p-10 bg-gray-100 rounded-xl">
@@ -148,7 +85,7 @@ const NewProductsSection = () => {
         {["Yeni Məhsullar", "Ən çox satılan", "Outlet", "Kampaniyalar"].map((tab) => (
           <button
             key={tab}
-            className={`text-lg font-bold pb-2 transition ${
+            className={`text-lg font-bold pb-2 mr-20 transition ${
               activeTab === tab ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"
             }`}
             onClick={() => setActiveTab(tab)}
@@ -157,13 +94,10 @@ const NewProductsSection = () => {
           </button>
         ))}
       </div>
-
       <div className="grid grid-cols-4 gap-6 mt-6">
-        {products
-          .filter((product) => product.category === activeTab)
-          .map((product, index) => (
-            <ProductCard key={index} product={product} />
-          ))}
+        {newProducts.find((section) => section.category === activeTab)?.items.map((product, index) => (
+          <ProductCard key={index} product={product} />
+        ))}
       </div>
     </div>
   );
@@ -172,19 +106,13 @@ const NewProductsSection = () => {
 const Home = () => {
   return (
     <div className="p-10 bg-gradient-to-b from-black to-purple-900">
-    <div className="flex ">
-      <Sidebar />
-      <div className="flex-1 p-8">
-        <BannerCarousel />
-        
-        {/* <div className="flex gap-6 mt-4">
-          {products.map((product, index) => (
-            <ProductCard key={index} product={product} />
-          ))}
-        </div> */}
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1 p-8">
+          <BannerCarousel />
+        </div>
       </div>
-    </div>
-    <NewProductsSection />
+      <NewProductsSection />
     </div>
   );
 };
