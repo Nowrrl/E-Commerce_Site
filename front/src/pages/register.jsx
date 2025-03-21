@@ -10,6 +10,7 @@ const Register = () => {
     });
 
     const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(""); // Error state
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -18,12 +19,27 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (userData.password.length < 6) {
+            setErrorMessage("Password must be at least 6 characters.");
+            return;
+        }
+
         try {
             const response = await registerUser(userData);
-            setShowModal(true); // Show modal on successful registration
+
+            if (response.message === "User registered successfully!") {
+                setShowModal(true); // show modal only if success
+                setErrorMessage(""); // clear error
+            } else {
+                // handle backend error like "Username already taken!"
+                setErrorMessage(response.message || "Registration failed.");
+            }
+
             console.log(response);
         } catch (error) {
-            alert("Registration Failed. Try again.");
+            console.error("Registration error:", error);
+            setErrorMessage("An unexpected error occurred. Please try again.");
         }
     };
 
@@ -80,6 +96,12 @@ const Register = () => {
                                 required
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
                             />
+
+                            {/* Show error message if exists */}
+                            {errorMessage && (
+                                <p className="text-red-400 text-sm text-center">{errorMessage}</p>
+                            )}
+
                             <button
                                 type="submit"
                                 className="w-1/2 mt-2 mx-auto block bg-purple-800 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"

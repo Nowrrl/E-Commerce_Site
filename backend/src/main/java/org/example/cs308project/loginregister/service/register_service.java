@@ -37,7 +37,21 @@ public class register_service {
         return newUser;
     }
 
-    public boolean userExists(String username) {
+    public boolean userNameExists(String username) {
         return registerRepository.findByUsername(username) != null;
+    }
+    public boolean userMailExists(String email) {
+        return registerRepository.findByEmail(email) != null;
+    }
+
+
+    public Long getUserIdByEmail(String email) {
+        register_model user = registerRepository.findByEmail(email);
+        return (user != null) ? user.getId() : null;
+    }
+
+    public Long getUserIdByUsername(String username) {
+        register_model user = registerRepository.findByUsername(username);
+        return (user != null) ? user.getId() : null;
     }
 }

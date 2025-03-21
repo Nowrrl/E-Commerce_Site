@@ -1,8 +1,10 @@
-package org.example.cs308project.products.repository;
+package org.example.cs308project.products;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.example.cs308project.products.model.product_model;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,5 +36,21 @@ public interface product_repository extends JpaRepository<product_model, Long> {
 
     // Filter by Warranty Status
     List<product_model> findByWarrantyStatusIgnoreCase(String warrantyStatus);
+
+
+    List<product_model> findAllByOrderByPriceAsc();
+    List<product_model> findAllByOrderByPriceDesc();
+
+    // Sort by ID (Newest First)
+    List<product_model> findAllByOrderByIdDesc();
+
+    // Sort by quantity (ascending or descending)
+    List<product_model> findAllByOrderByQuantityAsc();
+    List<product_model> findAllByOrderByQuantityDesc();
+
+    // Generic sorting method
+    List<product_model> findAll(Sort sort);
+    Page<product_model> findAll(Pageable pageable);
+
 }
 

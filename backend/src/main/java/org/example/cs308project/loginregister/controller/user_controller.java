@@ -1,13 +1,13 @@
 package org.example.cs308project.loginregister.controller;
 
+import org.example.cs308project.loginregister.model.login_model;
+import org.example.cs308project.loginregister.model.register_model;
+import org.example.cs308project.loginregister.model.workers_model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.cs308project.loginregister.service.register_service;
 import org.example.cs308project.loginregister.service.login_service;
 import org.example.cs308project.loginregister.service.workers_service;
-import org.example.cs308project.loginregister.model.register_model;
-import org.example.cs308project.loginregister.model.login_model;
-import org.example.cs308project.loginregister.model.workers_model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +30,13 @@ public class user_controller {
     public Map<String, String> register(@RequestBody register_model user) {
         Map<String, String> response = new HashMap<>();
 
-        if (registerService.userExists(user.getUsername())) {
+        if (registerService.userNameExists(user.getUsername())) {
             response.put("message", "Username already taken!");
-        } else {
+        }
+        else if(registerService.userMailExists(user.getEmail())){
+            response.put("message", " This Email already exists!");
+
+        }else {
             registerService.registerUser(user.getEmail(), user.getUsername(), user.getPassword());
             response.put("message", "User registered successfully!");
         }

@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { loginUser } from "../api/api";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
     const [credentials, setCredentials] = useState({
         username: "",
         password: ""
     });
+    
+    const [errorMessage, setErrorMessage] = useState(""); // Error state
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -13,12 +18,23 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const response = await loginUser(credentials);
-            alert("Login Successful!");
+
+            if (response.message === "Login successful") {
+
+                navigate("/")
+
+                setErrorMessage(""); // clear error
+            } else {
+                setErrorMessage(response.message);
+            }
+
             console.log(response);
         } catch (error) {
-            alert("Login Failed. Check your credentials.");
+            console.error("Login error:", error);
+            setErrorMessage("An unexpected error occurred. Please try again.");
         }
     };
 
@@ -45,6 +61,9 @@ const Login = () => {
                         required
                         className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
                     />
+                    {errorMessage && (
+                         <p className="text-red-400 text-sm text-center">{errorMessage}</p>
+                     )}
                     <button
                         type="submit"
                         className="w-1/2 mt-2 mx-auto block bg-purple-800 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"

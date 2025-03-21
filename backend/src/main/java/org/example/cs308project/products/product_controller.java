@@ -1,10 +1,9 @@
-package org.example.cs308project.products.controller;
+package org.example.cs308project.products;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import org.example.cs308project.products.service.product_service;
-import org.example.cs308project.products.model.product_model;
 
 import java.util.List;
 import java.util.Optional;
@@ -87,5 +86,46 @@ public class product_controller {
     public List<product_model> filterByWarrantyStatus(@RequestParam String warrantyStatus) {
         return productService.filterByWarrantyStatus(warrantyStatus);
     }
+
+    @GetMapping("/sort/price/asc")
+    public List<product_model> sortByPriceAsc() {
+        return productService.sortByPriceAsc();
+    }
+
+    @GetMapping("/sort/price/desc")
+    public List<product_model> sortByPriceDesc() {
+        return productService.sortByPriceDesc();
+    }
+
+    // Sort by Newest First (ID Descending)
+    @GetMapping("/sort/newest")
+    public List<product_model> sortByNewest() {
+        return productService.sortByNewest();
+    }
+
+    // Sort by Quantity
+    @GetMapping("/sort/quantity/asc")
+    public List<product_model> sortByQuantityAsc() {
+        return productService.sortByQuantityAsc();
+    }
+
+    @GetMapping("/sort/quantity/desc")
+    public List<product_model> sortByQuantityDesc() {
+        return productService.sortByQuantityDesc();
+    }
+
+    // Generic Sorting Endpoint
+    @GetMapping("/sort")
+    public List<product_model> sortProducts(@RequestParam String field, @RequestParam String direction) {
+        return productService.sortProducts(field, direction);
+    }
+
+    // Paginated endpoint
+    @GetMapping("/page")
+    public Page<product_model> getPaginatedProducts(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int size) {
+        return productService.getPaginatedProducts(page, size);
+    }
+
 }
 
