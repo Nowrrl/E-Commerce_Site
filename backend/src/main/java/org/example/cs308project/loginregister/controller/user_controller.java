@@ -1,13 +1,13 @@
 package org.example.cs308project.loginregister.controller;
 
+import org.example.cs308project.loginregister.model.login_model;
+import org.example.cs308project.loginregister.model.register_model;
+import org.example.cs308project.loginregister.model.workers_model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.cs308project.loginregister.service.register_service;
 import org.example.cs308project.loginregister.service.login_service;
 import org.example.cs308project.loginregister.service.workers_service;
-import org.example.cs308project.loginregister.model.register_model;
-import org.example.cs308project.loginregister.model.login_model;
-import org.example.cs308project.loginregister.model.workers_model;
 
 import java.util.HashMap;
 import java.util.Map;
