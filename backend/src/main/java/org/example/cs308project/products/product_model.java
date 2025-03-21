@@ -1,4 +1,4 @@
-package org.example.cs308project.products.model;
+package org.example.cs308project.products;
 
 import jakarta.persistence.*;
 

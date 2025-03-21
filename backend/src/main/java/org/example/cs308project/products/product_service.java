@@ -1,9 +1,11 @@
-package org.example.cs308project.products.service;
+package org.example.cs308project.products;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.example.cs308project.products.repository.product_repository;
-import org.example.cs308project.products.model.product_model;
 
 import java.util.List;
 import java.util.Optional;
@@ -91,6 +93,49 @@ public class product_service {
     // Filter by Warranty Status
     public List<product_model> filterByWarrantyStatus(String warrantyStatus) {
         return productRepository.findByWarrantyStatusIgnoreCase(warrantyStatus);
+    }
+
+    public List<product_model> sortByPriceAsc() {
+        return productRepository.findAllByOrderByPriceAsc();
+    }
+
+    public List<product_model> sortByPriceDesc() {
+        return productRepository.findAllByOrderByPriceDesc();
+    }
+
+    // Sort by Newest First (ID Descending)
+    public List<product_model> sortByNewest() {
+        return productRepository.findAllByOrderByIdDesc();
+    }
+
+    // Sort by Quantity
+    public List<product_model> sortByQuantityAsc() {
+        return productRepository.findAllByOrderByQuantityAsc();
+    }
+
+    public List<product_model> sortByQuantityDesc() {
+        return productRepository.findAllByOrderByQuantityDesc();
+    }
+
+    // Generic Sorting Function
+    public List<product_model> sortProducts(String field, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(field).ascending() : Sort.by(field).descending();
+        return productRepository.findAll(sort);
+    }
+
+    public Page<product_model> getPaginatedProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable);
+    }
+
+    public Long getProductIdBySerialNumber(String serialNumber) {
+        product_model product = productRepository.findBySerialNumber(serialNumber);
+        return (product != null) ? product.getId() : null;
+    }
+
+    public Long getProductIdByName(String name) {
+        List<product_model> products = productRepository.findByNameContainingIgnoreCase(name);
+        return (!products.isEmpty()) ? products.get(0).getId() : null;
     }
 }
 
