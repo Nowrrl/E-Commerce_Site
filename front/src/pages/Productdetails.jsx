@@ -143,7 +143,7 @@ const ProductDetails = () => {
     ];
 
     return (
-        <div className="max-w-screen-xl mx-auto p-4">
+        <div className="border-t-1 border-white max-w-screen-xl mx-auto p-4 bg-gradient-to-b from-black to-purple-900">
             {/* Breadcrumbs */}
             <nav className="mb-4 text-sm text-gray-600 flex items-center space-x-2">
                 <Link to="/" className="hover:underline cursor-pointer">
