@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import BannerCarousel from "../components/BannerCarousel"; // Ensure this component exists or replace with your Banner component
 import puzzleImage from "../img/puzzle.jpeg";
 import vacuumCleanerImage from "../img/vacuumcleaner.jpeg";
@@ -34,6 +35,12 @@ const newProducts = [
     },
 ];
 
+const AllProducts = [
+    {
+        
+    },
+];
+
 const Sidebar = () => (
     <aside className="w-80 bg-white p-4 shadow-md rounded-lg">
         <ul className="space-y-2 m-5">
@@ -63,16 +70,21 @@ const Banner = () => (
 const ProductCard = ({ product }) => (
     <div className="border p-4 rounded-2xl shadow-lg w-72 bg-white transition-transform transform hover:scale-105 hover:shadow-xl">
         <div className="relative w-full h-44">
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded-xl" />
+            <img 
+              src={product.image ? product.image : "default_product_image.png"} 
+              alt={product.name} 
+              className="w-full h-full object-cover rounded-xl" 
+            />
             {product.oldPrice && (
                 <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-lg">
-          Endirim!
-        </span>
+                    Endirim!
+                </span>
             )}
         </div>
         <h3 className="font-semibold mt-3 text-gray-800 text-lg">{product.name}</h3>
         <p className="text-xl font-bold text-red-500 mt-1">{product.price} AZN</p>
-        {product.oldPrice && <p className="text-gray-400 line-through text-sm">{product.oldPrice} AZN</p>}
+        {product.model && <p className="text-sm text-gray-600">Model: {product.model}</p>}
+        {product.warrantyStatus && <p className="text-sm text-gray-600">Warranty: {product.warrantyStatus}</p>}
         <Link to={`/product/${product.id}`}>
             <button className="mt-4 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-lg text-lg font-semibold transition hover:opacity-90">
                 Bir kliklə al
@@ -82,12 +94,12 @@ const ProductCard = ({ product }) => (
 );
 
 const NewProductsSection = () => {
-    const [activeTab, setActiveTab] = useState("Yeni Məhsullar");
+    const [activeTab, setActiveTab] = useState("All Products");
 
     return (
         <div className="mt-8 p-10 bg-gray-100 rounded-xl">
             <div className="flex space-x-6 border-b pb-3">
-                {["Yeni Məhsullar", "Ən çox satılan", "Outlet", "Kampaniyalar"].map((tab) => (
+                {["All Products", "Yeni Məhsullar", "Ən çox satılan", "Outlet", "Kampaniyalar"].map((tab) => (
                     <button
                         key={tab}
                         className={`text-lg font-bold pb-2 mr-20 transition ${
@@ -104,13 +116,41 @@ const NewProductsSection = () => {
                     <ProductCard key={product.id} product={product} />
                 ))}
             </div>
+            <div className="grid grid-cols-4 gap-6 mt-6">
+                {AllProducts.find((section) => section.category === activeTab)?.items.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const BackendProductsSection = () => {
+    const [backendProducts, setBackendProducts] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://localhost:8085/products/all")
+            .then((response) => {
+                setBackendProducts(response.data);
+            })
+            .catch((error) => console.error("Error fetching backend products:", error));
+    }, []);
+
+    return (
+        <div className="mt-8 p-10 bg-gray-100 rounded-xl">
+            <h2 className="text-lg font-semibold mb-4">Backend Products</h2>
+            <div className="grid grid-cols-4 gap-6 mt-6">
+                {backendProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                ))}
+            </div>
         </div>
     );
 };
 
 const Home = () => {
     return (
-        <div className="border-t-1 border-white p-10  bg-gradient-to-b from-black to-purple-900">
+        <div className="border-t-1 border-white p-10 bg-gradient-to-b from-black to-purple-900">
             <div className="flex">
                 <Sidebar />
                 <div className="flex-1 p-8">
@@ -119,6 +159,7 @@ const Home = () => {
                 </div>
             </div>
             <NewProductsSection />
+            <BackendProductsSection />
         </div>
     );
 };
