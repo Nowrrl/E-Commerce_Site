@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_controller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_model.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_service.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/shoppingcart/cart_controller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/shoppingcart/cart_model.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/shoppingcart/cart_repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/shoppingcart/cart_service.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_controller.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_model.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_repository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_service.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_controller.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_model.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_repository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_service.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_controller.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_model.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_repository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_service.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front/src/img/amd-ryzen-5-5500.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front/src/img/iphone16-pro-max.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front/src/img/macbook-air-midnight.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front/src/img/monster-tulpar-t7.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/Cs308ProjectApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/Cs308ProjectApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/corsconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/corsconfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/controller/user_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/controller/user_controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/repository/login_repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/repository/login_repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/repository/register_repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/repository/register_repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/repository/workers_repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/repository/workers_repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/service/register_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/loginregister/service/register_service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/controller/product_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/model/product_model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/repository/product_repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/service/product_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/Cs308ProjectApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/Cs308ProjectApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/controller/user_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/controller/user_controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/login_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/login_model.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/register_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/register_model.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/workers_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/workers_model.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/login_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/login_repository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/register_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/register_repository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/workers_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/workers_repository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/login_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/login_service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/register_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/register_service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/workers_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/workers_service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/controller/product_controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/model/product_model.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/repository/product_repository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/service/product_service.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Home.jsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Nowrrl&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MuradAsadzade/CS308Project.git&quot;,
+    &quot;accountId&quot;: &quot;1d1d9227-76fa-4ab2-a8c3-855332f8ea02&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2trEcsRlmhkmoNXeLZZm1T2UfHb" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.Cs308ProjectApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merging main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/rasul/IdeaProjects/CS308Project_1/backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="backend" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Cs308ProjectApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="CS308Project" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.cs308project.Cs308ProjectApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="" />
+      <created>1741101875217</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741101875217</updated>
+      <workItem from="1741101876325" duration="4560000" />
+      <workItem from="1741529539316" duration="358000" />
+      <workItem from="1741529904282" duration="24000" />
+      <workItem from="1741529932903" duration="7908000" />
+      <workItem from="1742564962572" duration="2831000" />
+      <workItem from="1742580520817" duration="3681000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -30,9 +30,13 @@ public class user_controller {
     public Map<String, String> register(@RequestBody register_model user) {
         Map<String, String> response = new HashMap<>();
 
-        if (registerService.userExists(user.getUsername())) {
+        if (registerService.userNameExists(user.getUsername())) {
             response.put("message", "Username already taken!");
-        } else {
+        }
+        else if(registerService.userMailExists(user.getEmail())){
+            response.put("message", " This Email already exists!");
+
+        }else {
             registerService.registerUser(user.getEmail(), user.getUsername(), user.getPassword());
             response.put("message", "User registered successfully!");
         }

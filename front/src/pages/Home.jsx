@@ -55,7 +55,7 @@ const Banner = () => (
     <div className="flex-1 bg-gray-200 p-8 text-center">
         <h2 className="text-2xl font-bold">Smart alış-verişə hazır ol!</h2>
         <p className="text-xl">GEEPAS MƏHSULLARI</p>
-        <div className="text-4xl font-bold my-4">0 AZN <span className="text-lg">aylıq</span></div>
+        <div className="text-4xl font-bold my-4">111 AZN <span className="text-lg">aylıq</span></div>
         <img src="geepas_banner.png" alt="Geepas Products" className="mx-auto" />
     </div>
 );
@@ -110,7 +110,7 @@ const NewProductsSection = () => {
 
 const Home = () => {
     return (
-        <div className="p-10  bg-gradient-to-b from-black to-purple-900">
+        <div className="border-t-1 border-white p-10  bg-gradient-to-b from-black to-purple-900">
             <div className="flex">
                 <Sidebar />
                 <div className="flex-1 p-8">
