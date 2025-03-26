@@ -1,7 +1,9 @@
+// src/store/user/userSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  currentUser: { username: "Guest", avatar: "", email: "guest@example.com" },
+  // If user is not logged in, we'll store `null` here.
+  currentUser: null,
 };
 
 const userSlice = createSlice({
