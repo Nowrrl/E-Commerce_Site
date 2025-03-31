@@ -134,8 +134,8 @@ public class product_service {
     }
 
     public Long getProductIdByName(String name) {
-        List<product_model> products = productRepository.findByNameContainingIgnoreCase(name);
-        return (!products.isEmpty()) ? products.get(0).getId() : null;
+        product_model product = productRepository.findByName(name);
+        return (product != null) ? product.getId() : null;
     }
 }
 

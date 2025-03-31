@@ -1,9 +1,12 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
-import { loginUser } from "../api/api";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";           // <-- Import useDispatch
-import { setUser } from "../redux/user/userSlice";   // <-- Import setUser
+import { useDispatch } from "react-redux";
+import axios from "axios";
+
+import { loginUser } from "../api/api";
+import { setUser, logout } from "../redux/user/userSlice";
+import { setCartFromBackend, clearCart } from "../redux/cartSlice";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -13,7 +16,7 @@ const Login = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // <-- Initialize dispatch
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -23,29 +26,41 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      // 🔄 Clear old session before login
+      dispatch(logout());
+      dispatch(clearCart());
+
       const response = await loginUser(credentials);
-      // Example response from backend might look like:
-      // { message: "Login successful", user: { username: "john", email: "john@example.com" } }
 
       if (response.message === "Login successful") {
-        // 1) Dispatch user info to Redux so the rest of the app knows we're logged in
-        if (response.user) {
-          dispatch(setUser(response.user)); 
-        } else {
-          // fallback if your backend doesn't return user data
-          dispatch(setUser({ username: credentials.username }));
-        }
+        const user = response.user;
+        dispatch(setUser(user)); // ✅ Save user to Redux and localStorage
 
-        // 2) Navigate to home or wherever
+        // 🛒 Fetch user-specific cart from backend
+        const cartRes = await axios.get(
+          `http://localhost:8085/cart/view?userId=${user.id}`
+        );
+
+        const fullCart = await Promise.all(
+          cartRes.data.map(async (item) => {
+            const productRes = await axios.get(
+              `http://localhost:8085/products/${item.productId}`
+            );
+            return {
+              product: productRes.data,
+              quantity: item.quantity,
+            };
+          })
+        );
+
+        dispatch(setCartFromBackend(fullCart)); // ✅ Save cart to Redux and localStorage
+
         navigate("/");
-        setErrorMessage("");
       } else {
         setErrorMessage(response.message);
       }
-
-      console.log(response);
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch (err) {
+      console.error("Login error:", err);
       setErrorMessage("An unexpected error occurred. Please try again.");
     }
   };

@@ -53,6 +53,13 @@ public class cart_controller {
         return cartService.removeFromCart(userId, productId);
     }
 
+    // Clear cart for a user
+    @DeleteMapping("/clear")
+    public String clearCart(@RequestParam Long userId) {
+        cartService.clearCart(userId);
+        return "Cart cleared";
+    }
+
     // View cart
     @GetMapping("/view")
     public List<cart_model> viewCart(@RequestParam Long userId) {

@@ -54,4 +54,8 @@ public class register_service {
         register_model user = registerRepository.findByUsername(username);
         return (user != null) ? user.getId() : null;
     }
+
+    public register_model findByUsername(String username) {
+        return registerRepository.findByUsername(username);
+    }
 }

@@ -1,61 +1,97 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "./redux/user/userSlice";
 
-import Login from "./pages/login.jsx";
-import Register from "./pages/Register.jsx";
-import Home from "./pages/Home.jsx";
-import ProductDetails from "./pages/ProductDetails.jsx";
+import { useEffect } from "react";
+import axios from "axios";
+
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProductDetails from "./pages/ProductDetails";
+import ShoppingCart from "./pages/ShoppingCart";
+
+import { clearCart } from "./redux/cartSlice";
+
+
+import { logout } from "./redux/user/userSlice";
+import { setCartFromBackend } from "./redux/cartSlice"; // ✅ make sure this exists
 
 function App() {
-  // Grab the user from Redux
   const currentUser = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
 
+
+  // Load cart when user changes
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (!currentUser?.id) return;
+
+      try {
+        const response = await axios.get(`http://localhost:8085/cart/view`, {
+          params: { userId: currentUser.id }
+        });
+
+        const cartItems = await Promise.all(
+          response.data.map(async (item) => {
+            const productRes = await axios.get(`http://localhost:8085/products/${item.productId}`);
+            return {
+              product: productRes.data,
+              quantity: item.quantity
+            };
+          })
+        );
+
+        dispatch(setCartFromBackend(cartItems));
+      } catch (err) {
+        console.error("Error loading cart from backend:", err);
+      }
+    };
+
+    fetchCart();
+  }, [currentUser, dispatch]);
+
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(clearCart());       // clear cart from Redux + localStorage
+    dispatch(logout());          // reset user state
+    window.location.href = "/login"; // ✅ safely redirect
   };
 
   return (
     <Router>
-      {/* Navigation Bar */}
-      <nav className="bg-[#0C0C0E] text-white py-4 p-6 shadow-lg">
+      <nav className="bg-[#0C0C0E] text-white py-4 shadow-lg">
         <div className="container mx-auto flex justify-between items-center px-6">
-          <Link to="/" className="font-bold text-3xl">
-            Smart Electronics
-          </Link>
-          
-          {/* Conditionally show links based on currentUser */}
-          <div className="space-x-6">
-            {/* Always show "Home" */}
-            <Link to="/" className="hover:underline">Home</Link>
-            
-            {currentUser ? (
-              <>
-                {/* If logged in, show username & Logout button */}
-                <span>Logged in as:    {currentUser.username}</span>
-                <button onClick={handleLogout} className="hover:underline">
-                  Logout
-                </button>
-              </>
+          <h1 className="font-bold text-3xl">Smart Electronics</h1>
+          <div className="space-x-6 flex items-center">
+            <Link to="/cart">Cart</Link>
+            <Link to="/">Home</Link>
+            <span>
+              Logged in as:{" "}
+              {currentUser?.username ? currentUser.username : "Guest"}
+            </span>
+            {currentUser?.username && currentUser.username !== "Guest" ? (
+              <button onClick={handleLogout} className="hover:underline">
+                Logout
+              </button>
             ) : (
               <>
-                {/* If NOT logged in, show Login/Register */}
-                <Link to="/login" className="hover:underline">Login</Link>
-                <Link to="/register" className="hover:underline">Register</Link>
+                <Link to="/login" className="hover:underline">
+                  Login
+                </Link>
+                <Link to="/register" className="hover:underline">
+                  Register
+                </Link>
               </>
             )}
           </div>
         </div>
       </nav>
 
-      {/* Page Content */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<ShoppingCart />} />
       </Routes>
     </Router>
   );

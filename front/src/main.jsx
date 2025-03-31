@@ -1,8 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom/client"; // Use "react-dom/client" in React 18+
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
-import App from "./App";
+import App from "./App"; // <-- this should replace App
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

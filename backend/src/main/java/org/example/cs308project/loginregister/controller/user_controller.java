@@ -45,16 +45,27 @@ public class user_controller {
 
     // Customer Login Endpoint
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody login_model loginUser) {
-        Map<String, String> response = new HashMap<>();
+    public Map<String, Object> login(@RequestBody login_model loginUser) {
+        Map<String, Object> response = new HashMap<>();
 
         boolean isAuthenticated = loginService.authenticate(loginUser.getUsername(), loginUser.getPassword());
 
         if (isAuthenticated) {
+            // Find the full user record from DB
+            register_model user = registerService.findByUsername(loginUser.getUsername());
+
+            // Prepare user details to send back to frontend
+            Map<String, Object> userDetails = new HashMap<>();
+            userDetails.put("id", user.getId());
+            userDetails.put("username", user.getUsername());
+            userDetails.put("email", user.getEmail());
+
             response.put("message", "Login successful");
+            response.put("user", userDetails);  // ✅ Now includes ID
         } else {
             response.put("message", "Invalid username or password");
         }
+
         return response;
     }
 

@@ -23,6 +23,9 @@ public interface product_repository extends JpaRepository<product_model, Long> {
     // Search by Serial Number (Exact Match)
     product_model findBySerialNumber(String serialNumber);
 
+    // Search by Name
+    product_model findByName(String name);
+
     // Search by Description (Keyword-based)
     List<product_model> findByDescriptionContainingIgnoreCase(String keyword);
 

@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartSlice";
+import { addToBackendCart } from "../api/api";
+
+
 
 // Example images
 import iphone16Image from "../img/iphone16image.webp";
@@ -13,8 +18,8 @@ import otherProduct2 from "../img/iphone16image.webp";
 import otherProduct3 from "../img/iphone16image.webp";
 import otherProduct4 from "../img/iphone16image.webp";
 
-const ProductDetails = () => {
-  // 1) Grab the `id` from the URL (via react-router)
+const Productdetails = () => {
+  // 1) Grab the id from the URL (via react-router)
   const { id } = useParams();
 
   // 2) State for the fetched product
@@ -34,7 +39,9 @@ const ProductDetails = () => {
   const [newReview, setNewReview] = useState({ rating: 5, text: "" });
 
   // 4) Current user (if using Redux)
-  const { currentUser } = useSelector((state) => state.user) || { currentUser: {} };
+  const currentUser = useSelector((state) => state.user.currentUser);
+
+
 
   // 5) Fetch product details from your backend
   useEffect(() => {
@@ -42,18 +49,42 @@ const ProductDetails = () => {
       .get(`http://localhost:8085/products/${id}`)
       .then((response) => setProductData(response.data))
       .catch((error) => console.error("Error fetching product details:", error));
+
+     
   }, [id]);
 
   // 6) If product data is not loaded yet, show a loading indicator
   if (!productData) {
-    return <div className="text-center p-10 text-white">Loading product details...</div>;
+    return (
+      <div className="text-center p-10 text-white">
+        Loading product details...
+      </div>
+    );
   }
+
+  const dispatch = useDispatch();
+
+  const handleAddToCart = async () => {
+    dispatch(addToCart({ product: productData, quantity }));
+  
+    //  sync to backend
+    try {
+      const response = await addToBackendCart(
+        currentUser?.username || currentUser?.email, // emailOrUsername
+        productData.name, // productIdentifier
+        quantity
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // 7) Pricing calculations
   const totalPrice = productData.price * quantity;
   const monthlyInstallment = totalPrice / parseInt(installment, 10);
 
-  // 8) Accordion sections - adjusted to show only fields that exist in your product_model
+  // 8) Accordion sections
   const accordionSections = [
     {
       title: "Product Details",
@@ -105,7 +136,10 @@ const ProductDetails = () => {
       title: "Payment Options",
       content: (
         <div className="text-sm text-gray-700">
-          <p>Payment options include credit card, bank transfer, cash on delivery, and installment plans.</p>
+          <p>
+            Payment options include credit card, bank transfer, cash on
+            delivery, and installment plans.
+          </p>
           <p>For more details, please proceed to the payment page.</p>
         </div>
       ),
@@ -141,19 +175,17 @@ const ProductDetails = () => {
       setNewComment("");
     }
   };
-
-  // 12) Review submission (includes who posted the review)
+  // 12) Review submission
   const handleReviewSubmit = () => {
     if (newReview.text.trim() !== "") {
       const username = currentUser?.username || "Anonymous";
-      // Add user field to the review
       const reviewWithUser = {
         rating: newReview.rating,
         text: newReview.text,
         user: username,
       };
       setReviews([...reviews, reviewWithUser]);
-      setNewReview({ rating: 5, text: "" });
+      setNewReview({ rating: 5,username,  text: "" });
     }
   };
 
@@ -216,10 +248,13 @@ const ProductDetails = () => {
           <div className="mb-4">
             <p className="text-sm text-gray-700">
               Distributor:{" "}
-              <span className="font-medium">{productData.distributorInfo || "Unknown"}</span>
+              <span className="font-medium">
+                {productData.distributorInfo || "Unknown"}
+              </span>
             </p>
             <p className="text-sm text-gray-700">
-              Warranty: <span className="font-medium">{productData.warrantyStatus}</span>
+              Warranty:{" "}
+              <span className="font-medium">{productData.warrantyStatus}</span>
             </p>
           </div>
 
@@ -234,7 +269,9 @@ const ProductDetails = () => {
               min="1"
               max="99"
               value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)}
+              onChange={(e) =>
+                setQuantity(parseInt(e.target.value, 10) || 1)
+              }
               className="w-16 border rounded px-2 py-1 cursor-pointer"
             />
           </div>
@@ -267,7 +304,21 @@ const ProductDetails = () => {
 
           {/* Action Buttons */}
           <div className="flex space-x-4">
-            <button
+          <button
+            onClick={handleAddToCart}
+            className="
+              bg-gradient-to-b from-black to-purple-900
+              text-white px-6 py-2 rounded transition
+              cursor-pointer
+              hover:scale-105 hover:brightness-110
+            "
+          >
+            Add to Cart
+          </button>
+
+            {/* OPTIONAL: Button linking to Shopping Cart */}
+            <Link
+              to="/cart"
               className="
                 bg-gradient-to-b from-black to-purple-900
                 text-white px-6 py-2 rounded transition
@@ -275,8 +326,8 @@ const ProductDetails = () => {
                 hover:scale-105 hover:brightness-110
               "
             >
-              Add to Cart
-            </button>
+              Go to Shopping Cart
+            </Link>
           </div>
         </div>
       </div>
@@ -297,9 +348,7 @@ const ProductDetails = () => {
               </span>
             </button>
             {openIndex === index && (
-              <div className="px-4 pb-4">
-                {section.content}
-              </div>
+              <div className="px-4 pb-4">{section.content}</div>
             )}
           </div>
         ))}
@@ -327,16 +376,23 @@ const ProductDetails = () => {
 
       {/* Main Container for Reviews & Comments */}
       <div className="mt-8 border-t border-gray-300 pt-4 bg-white p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-6">Customer Reviews & Comments</h2>
+        <h2 className="text-xl font-semibold mb-6">
+          Customer Reviews & Comments
+        </h2>
 
         {/* Reviews Section */}
         <div className="mb-10">
-          <h3 className="text-lg font-semibold mb-4 text-green-700">Leave a Review</h3>
+          <h3 className="text-lg font-semibold mb-4 text-green-700">
+            Leave a Review
+          </h3>
           <div className="flex flex-col space-y-2 mb-4">
             <select
               value={newReview.rating}
               onChange={(e) =>
-                setNewReview({ ...newReview, rating: parseInt(e.target.value, 10) })
+                setNewReview({
+                  ...newReview,
+                  rating: parseInt(e.target.value, 10),
+                })
               }
               className="
                 border border-gray-300
@@ -366,7 +422,9 @@ const ProductDetails = () => {
               "
               placeholder="Write your review here..."
               value={newReview.text}
-              onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
+              onChange={(e) =>
+                setNewReview({ ...newReview, text: e.target.value })
+              }
             />
             <button
               onClick={handleReviewSubmit}
@@ -407,14 +465,18 @@ const ProductDetails = () => {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+              <p className="text-gray-500">
+                No reviews yet. Be the first to review!
+              </p>
             )}
           </div>
         </div>
 
         {/* Comments Section */}
         <div>
-          <h3 className="text-lg font-semibold mb-4 text-purple-700">Customer Comments</h3>
+          <h3 className="text-lg font-semibold mb-4 text-purple-700">
+            Customer Comments
+          </h3>
           <div className="flex flex-col space-y-2 mb-4">
             <textarea
               className="
@@ -469,7 +531,9 @@ const ProductDetails = () => {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+              <p className="text-gray-500">
+                No comments yet. Be the first to comment!
+              </p>
             )}
           </div>
         </div>
@@ -478,4 +542,6 @@ const ProductDetails = () => {
   );
 };
 
-export default ProductDetails;
+export default Productdetails;
+
+

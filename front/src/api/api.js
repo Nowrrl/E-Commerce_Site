@@ -23,3 +23,44 @@ export const loginUser = async (credentials) => {
         throw error;
     }
 };
+
+// Product cart API call
+export const addToBackendCart = async (emailOrUsername, productIdentifier, quantity) => {
+    try {
+      const response = await axios.post("http://localhost:8085/cart/add", {
+        emailOrUsername,
+        productIdentifier,
+        quantity,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      throw error;
+    }
+  };
+
+
+  // Remove a specific product from cart
+export const removeFromBackendCart = async (userId, productId) => {
+  return await axios.delete(`http://localhost:8085/cart/remove`, {
+    params: { userId, productId },
+  });
+};
+
+// Clear entire cart
+export const clearBackendCart = async (userId) => {
+  try {
+    const response = await axios.delete(`http://localhost:8085/cart/clear`, {
+      params: { userId }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error clearing backend cart:", error);
+    throw error;
+  }
+};
+
+
+
+
+  
