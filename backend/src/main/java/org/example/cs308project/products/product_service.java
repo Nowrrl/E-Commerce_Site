@@ -137,5 +137,10 @@ public class product_service {
         product_model product = productRepository.findByName(name);
         return (product != null) ? product.getId() : null;
     }
+
+    public String getCategoryByName(String name) {
+        product_model product = productRepository.findByName(name);
+        return (product != null) ? product.getCategory() : null;
+    }
 }
 

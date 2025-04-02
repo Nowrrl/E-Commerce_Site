@@ -15,6 +15,9 @@ public class product_model {
     @Column(nullable = false)
     private String model;
 
+    @Column(nullable = false)
+    private String category;
+
     @Column(nullable = false, unique = true)
     private String serialNumber;
 
@@ -60,5 +63,8 @@ public class product_model {
 
     public String getDistributorInfo() { return distributorInfo; }
     public void setDistributorInfo(String distributorInfo) { this.distributorInfo = distributorInfo; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 }
 
