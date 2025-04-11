@@ -138,9 +138,11 @@ public class product_service {
         return (product != null) ? product.getId() : null;
     }
 
-    public String getCategoryByName(String name) {
-        product_model product = productRepository.findByName(name);
-        return (product != null) ? product.getCategory() : null;
+    public String getCategoryByProductId(Long id) {
+        Optional<product_model> product = productRepository.findById(id);
+        return product.map(product_model::getCategory)
+                .orElse("Category not found");
     }
+
 }
 
