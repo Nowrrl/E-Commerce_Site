@@ -101,7 +101,7 @@ const ProductCard = ({ product }) => (
   <div className="border p-4 rounded-2xl shadow-lg w-72 bg-white transition-transform transform hover:scale-105 hover:shadow-xl">
     <div className="relative w-full h-44">
       <img
-        src={product.image ? product.image : "default_product_image.png"}
+        src={product.imageUrl ? product.imageUrl : "default_product_image.png"}
         alt={product.name}
         className="w-full h-full object-cover rounded-xl"
       />
@@ -126,12 +126,12 @@ const ProductCard = ({ product }) => (
 );
 
 const NewProductsSection = () => {
-  const [activeTab, setActiveTab] = useState("All Products");
+  const [activeTab, setActiveTab] = useState("New Products");
 
   return (
     <div className="mt-8 p-10 bg-gray-100 rounded-xl">
       <div className="flex space-x-6 border-b pb-3">
-        {["All Products", "Yeni Məhsullar", "Ən çox satılan", "Outlet", "Kampaniyalar"].map(
+        {["Yeni Məhsullar", "Ən çox satılan", "Outlet", "Kampaniyalar"].map(
           (tab) => (
             <button
               key={tab}
@@ -167,6 +167,8 @@ const NewProductsSection = () => {
 
 const BackendProductsSection = () => {
   const [backendProducts, setBackendProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("name");
 
   useEffect(() => {
     axios
@@ -177,11 +179,44 @@ const BackendProductsSection = () => {
       .catch((error) => console.error("Error fetching backend products:", error));
   }, []);
 
+  // Filter backend products by searchQuery
+  const filteredBackendProducts = backendProducts.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Sort backend products
+  const sortedBackendProducts = filteredBackendProducts.sort((a, b) => {
+    if (sortBy === "priceAsc") {
+      return a.price - b.price;
+    } else if (sortBy === "priceDesc") {
+      return b.price - a.price;
+    } else if (sortBy === "name") {
+      return a.name.localeCompare(b.name);
+    }
+    return 0;
+  });
+
   return (
     <div className="mt-8 p-10 bg-gray-100 rounded-xl">
-      <h2 className="text-lg font-semibold mb-4">Backend Products</h2>
+      <h2 className="text-lg font-semibold mb-4">All Products</h2>
+      <div className="flex mt-4 space-x-4">
+        <input
+          type="text"
+          placeholder="Search Products..."
+          className="p-2 border rounded-lg"
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <select
+          className="p-2 border rounded-lg"
+          onChange={(e) => setSortBy(e.target.value)}
+        >
+          <option value="name">Sort by Name</option>
+          <option value="priceAsc">Sort by Price (Low to High)</option>
+          <option value="priceDesc">Sort by Price (High to Low)</option>
+        </select>
+      </div>
       <div className="grid grid-cols-4 gap-6 mt-6">
-        {backendProducts.map((product) => (
+        {sortedBackendProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
