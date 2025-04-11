@@ -21,6 +21,9 @@ public class product_model {
     @Column(nullable = false, unique = true)
     private String serialNumber;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -66,5 +69,14 @@ public class product_model {
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 }
 
