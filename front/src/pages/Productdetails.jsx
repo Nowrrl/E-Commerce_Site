@@ -31,13 +31,13 @@ const Productdetails = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
   // Comments
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(null);
   const [newComment, setNewComment] = useState("");
 
   // Reviews
-  const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState({ rating: 5, text: "" });
-
+  const [reviews] = useState([]);
+  const [newReview, setNewReview] = useState({ rating: 5 });
+  
   // 4) Current user (if using Redux)
   const currentUser = useSelector((state) => state.user.currentUser);
 
@@ -45,13 +45,29 @@ const Productdetails = () => {
 
   // 5) Fetch product details from your backend
   useEffect(() => {
-    axios
-      .get(`http://localhost:8085/products/${id}`)
-      .then((response) => setProductData(response.data))
-      .catch((error) => console.error("Error fetching product details:", error));
+    const fetchData = async () => {
+      try {
+        // Make both API requests concurrently
+        const [productResponse, commentsResponse] = await Promise.all([
+          axios.get(`http://localhost:8085/products/${id}`),
+          axios.get(`http://localhost:8085/comments/product/${id}`)
+        ]);
+  
+        // Set state for product details and comments
+        setProductData(productResponse.data);
+        setComments(commentsResponse.data);
+        console.log(commentsResponse.data);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, [id]); // Run when `id` changes
+  
 
-     
-  }, [id]);
+  
 
   // 6) If product data is not loaded yet, show a loading indicator
   if (!productData) {
@@ -63,6 +79,7 @@ const Productdetails = () => {
   }
 
   const dispatch = useDispatch();
+
 
   const handleAddToCart = async () => {
     dispatch(addToCart({ product: productData, quantity }));
@@ -168,26 +185,58 @@ const Productdetails = () => {
   ];
 
   // 11) Comment submission
-  const handleCommentSubmit = () => {
-    if (newComment.trim() !== "") {
-      const username = currentUser?.username || "Anonymous";
-      setComments([...comments, { username, text: newComment }]);
-      setNewComment("");
+  const handleCommentSubmit = async () => {
+    if (newComment.trim() === "") return;
+  
+    try {
+      const userId = currentUser?.id; // or however you store the user ID
+      const productId = productData.id;
+  
+      const response = await axios.post("http://localhost:8085/comments/add", null, {
+        params: {
+          userId,
+          productId,
+          text: newComment,
+          rating: 5, // you can adjust this or make it dynamic
+        },
+      });
+  
+      const savedComment = response.data;
+  
+      setComments((prevComments) => [...prevComments, {
+        user: { username: currentUser?.username || "Anonymous" }, 
+        text: savedComment.text,
+      }]);
+  
+      setNewComment(""); // Clear the input
+    } catch (error) {
+      console.error("Failed to submit comment:", error);
     }
   };
+
+  const hasReviewed = reviews.some(
+    (review) => review.user === currentUser.username
+  );
+  
   // 12) Review submission
   const handleReviewSubmit = () => {
-    if (newReview.text.trim() !== "") {
-      const username = currentUser?.username || "Anonymous";
-      const reviewWithUser = {
-        rating: newReview.rating,
-        text: newReview.text,
-        user: username,
-      };
-      setReviews([...reviews, reviewWithUser]);
-      setNewReview({ rating: 5,username,  text: "" });
+    if (hasReviewed) {
+      toast.error("You have already submitted a review.");
+      return;
     }
+  
+    const newEntry = {
+      rating: newReview.rating,
+      user: currentUser?.username || "Anonymous",
+    };
+  
+    setReviews([...reviews, newEntry]);
+    toast.success("Review submitted!");
   };
+  
+ 
+ 
+  
 
   return (
     <div className="border-t-1 border-white max-w-screen-xl mx-auto p-4 bg-gradient-to-b from-black to-purple-900">
@@ -328,6 +377,11 @@ const Productdetails = () => {
             >
               Go to Shopping Cart
             </Link>
+            <button
+            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:opacity-90"
+          >
+            💖 Add to Wishlist
+          </button>
           </div>
         </div>
       </div>
@@ -380,68 +434,107 @@ const Productdetails = () => {
           Customer Reviews & Comments
         </h2>
 
-        {/* Reviews Section */}
+      {/* Reviews Section */}
         <div className="mb-10">
           <h3 className="text-lg font-semibold mb-4 text-green-700">
             Leave a Review
           </h3>
-          <div className="flex flex-col space-y-2 mb-4">
-            <select
-              value={newReview.rating}
-              onChange={(e) =>
-                setNewReview({
-                  ...newReview,
-                  rating: parseInt(e.target.value, 10),
-                })
-              }
-              className="
-                border border-gray-300
-                p-2
-                rounded
-                w-32
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
-            >
-              {[5, 4, 3, 2, 1].map((star) => (
-                <option key={star} value={star}>
-                  {star} Stars
-                </option>
-              ))}
-            </select>
-            <textarea
-              className="
-                border border-gray-300
-                p-2
-                w-full
-                rounded
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
-              placeholder="Write your review here..."
-              value={newReview.text}
-              onChange={(e) =>
-                setNewReview({ ...newReview, text: e.target.value })
-              }
-            />
-            <button
-              onClick={handleReviewSubmit}
-              className="
-                self-start
-                bg-green-600
-                text-white
-                px-4
-                py-2
-                rounded
-                hover:bg-green-700
-                transition
-              "
-            >
-              Submit Review
-            </button>
-          </div>
+
+          {/* Check if user already reviewed */}
+          {reviews.some((r) => r.user === currentUser?.username) ? (
+            <p className="text-yellow-300 mb-4">✅ You have already submitted a review.</p>
+          ) : (
+            <div className="flex flex-col space-y-2 mb-6">
+              <select
+                value={newReview.rating}
+                onChange={(e) =>
+                  setNewReview({
+                    rating: parseInt(e.target.value, 10),
+                  })
+                }
+                className="
+                  border border-gray-300
+                  p-2
+                  rounded
+                  w-32
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-green-500
+                "
+              >
+                {[5, 4, 3, 2, 1].map((star) => (
+                  <option key={star} value={star}>
+                    {star} Stars
+                  </option>
+                ))}
+              </select>
+
+              <button
+                onClick={() => {
+                  const hasReviewed = reviews.some(
+                    (review) => review.user === currentUser?.username
+                  );
+                  if (hasReviewed) {
+                    toast.error("You have already submitted a review.");
+                    return;
+                  }
+
+                  const reviewToAdd = {
+                    rating: newReview.rating,
+                    user: currentUser?.username || "Anonymous",
+                  };
+
+                  setReviews([...reviews, reviewToAdd]);
+                  toast.success("Review submitted!");
+                }}
+                className="
+                  self-start
+                  bg-green-600
+                  text-white
+                  px-4
+                  py-2
+                  rounded
+                  hover:bg-green-700
+                  transition
+                "
+              >
+                Submit Review
+              </button>
+            </div>
+          )}
+
+          {/* Average Rating */}
+          {reviews.length > 0 && (
+            <div className="mb-6">
+              <h4 className="text-md text-white">
+                Average Rating:{" "}
+                <span className="text-yellow-400 font-bold">
+                  {(
+                    reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+                  ).toFixed(1)}
+                </span>{" "}
+                / 5
+              </h4>
+              <div className="flex gap-1 mt-1">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={
+                      i <
+                      Math.round(
+                        reviews.reduce((sum, r) => sum + r.rating, 0) /
+                          reviews.length
+                      )
+                        ? "text-yellow-400"
+                        : "text-gray-500"
+                    }
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Review List */}
           <div className="space-y-4">
@@ -458,19 +551,29 @@ const Productdetails = () => {
                     border-green-500
                   "
                 >
-                  <p className="font-semibold text-green-700 mb-1">
-                    {review.user || "Anonymous"} - {review.rating} Stars
-                  </p>
-                  <p className="text-gray-800">{review.text}</p>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-semibold text-green-700">
+                      {review.user}
+                    </span>
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <span
+                          key={i}
+                          className={i < review.rating ? "text-yellow-400" : "text-gray-300"}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">
-                No reviews yet. Be the first to review!
-              </p>
+              <p className="text-gray-400">No reviews yet. Be the first to review!</p>
             )}
           </div>
         </div>
+
 
         {/* Comments Section */}
         <div>
@@ -525,7 +628,7 @@ const Productdetails = () => {
                   "
                 >
                   <p className="font-semibold text-purple-700 mb-1">
-                    {comment.username}:
+                    {comment.user.username}:
                   </p>
                   <p className="text-gray-800">comment: {comment.text}</p>
                 </div>
@@ -543,5 +646,3 @@ const Productdetails = () => {
 };
 
 export default Productdetails;
-
-

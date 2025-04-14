@@ -58,4 +58,20 @@ public class register_service {
     public register_model findByUsername(String username) {
         return registerRepository.findByUsername(username);
     }
+
+    public register_model findById(Long id) {
+        return registerRepository.findById(id).orElse(null);
+    }
+
+    public void saveUser(register_model user) {
+        registerRepository.save(user);
+    }
+
+    public void updateDeliveryAddress(Long userId, String address) {
+        register_model user = findById(userId);
+        if (user != null) {
+            user.setDeliveryAddress(address);
+            registerRepository.save(user);
+        }
+    }
 }

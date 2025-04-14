@@ -127,5 +127,11 @@ public class product_controller {
         return productService.getPaginatedProducts(page, size);
     }
 
+    @GetMapping("/category/{id}")
+    public String getCategoryByProductId(@PathVariable Long id) {
+        return productService.getCategoryByProductId(id);
+    }
+
+
 }
 
