@@ -14,6 +14,7 @@ import ClientOrders from "./pages/ClientOrders.jsx"; // Ensure this path is corr
 import { clearCart } from "./redux/cartSlice";
 import { logout } from "./redux/user/userSlice";
 import { setCartFromBackend } from "./redux/cartSlice";
+import Checkout from "./pages/Checkout.jsx";
 
 function App() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -95,6 +96,7 @@ function App() {
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/profile" element={<ClientProfile />} />
           <Route path="/clientorders" element={<ClientOrders />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </Router>
   );
