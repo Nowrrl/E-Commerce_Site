@@ -60,7 +60,9 @@ function App() {
     <Router>
       <nav className="bg-[#0C0C0E] text-white py-4 shadow-lg">
         <div className="container mx-auto flex justify-between items-center px-6">
-          <h1 className="font-bold text-3xl">Smart Electronics</h1>
+          <h1 className="font-bold text-3xl">
+            <Link to="/">Smart Electronics</Link>
+          </h1>
           <div className="space-x-6 flex items-center">
             <Link to="/cart">Cart</Link>
             <Link to="/">Home</Link>

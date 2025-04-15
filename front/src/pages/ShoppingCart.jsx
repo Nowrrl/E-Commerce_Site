@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import { clearCart, removeFromCart } from "../redux/cartSlice";
 import { removeFromBackendCart, clearBackendCart } from "../api/api";
 
-
-
 function ShoppingCart() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -19,7 +17,7 @@ function ShoppingCart() {
 
   const handleRemove = async (productId) => {
     dispatch(removeFromCart(productId));
-  
+
     if (currentUser?.id) {
       try {
         await removeFromBackendCart(currentUser.id, productId);
@@ -39,7 +37,6 @@ function ShoppingCart() {
     }
     dispatch(clearCart()); // clear frontend regardless
   };
-  
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
