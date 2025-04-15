@@ -18,6 +18,17 @@ public class register_model {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -50,4 +61,8 @@ public class register_model {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+
+
 }

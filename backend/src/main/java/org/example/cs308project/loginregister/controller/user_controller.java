@@ -85,4 +85,27 @@ public class user_controller {
         }
         return response;
     }
+
+    @GetMapping("/{id}")
+    public register_model getUserById(@PathVariable Long id) {
+        return registerService.findById(id);
+    }
+
+    @GetMapping("/get-address/{id}")
+    public Map<String, String> getDeliveryAddress(@PathVariable Long id) {
+        register_model user = registerService.findById(id);
+        Map<String, String> response = new HashMap<>();
+        if (user != null && user.getDeliveryAddress() != null) {
+            response.put("deliveryAddress", user.getDeliveryAddress());
+        } else {
+            response.put("deliveryAddress", "");
+        }
+        return response;
+    }
+
+    @PutMapping("/update-address/{id}")
+    public String updateAddress(@PathVariable Long id, @RequestParam String address) {
+        registerService.updateDeliveryAddress(id, address);
+        return "Delivery address updated successfully.";
+    }
 }

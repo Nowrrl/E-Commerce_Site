@@ -9,6 +9,8 @@ import Login from "./pages/login";
 import Register from "./pages/Register";
 import ProductDetails from "./pages/ProductDetails";
 import ShoppingCart from "./pages/ShoppingCart";
+import ClientProfile from "./pages/ClientProfile"; // ✅ import it
+
 
 import { clearCart } from "./redux/cartSlice";
 
@@ -66,6 +68,11 @@ function App() {
           <div className="space-x-6 flex items-center">
             <Link to="/cart">Cart</Link>
             <Link to="/">Home</Link>
+            <Link
+              to="/profile"
+            >
+              My Profile
+            </Link>
             <span>
               Logged in as:{" "}
               {currentUser?.username ? currentUser.username : "Guest"}
@@ -82,6 +89,7 @@ function App() {
                 <Link to="/register" className="hover:underline">
                   Register
                 </Link>
+
               </>
             )}
           </div>
@@ -94,6 +102,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/profile" element={<ClientProfile />} />
+
       </Routes>
     </Router>
   );
