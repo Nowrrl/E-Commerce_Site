@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/comments")
@@ -33,4 +34,30 @@ public class comment_controller {
     public List<comment_model> getCommentsByUser(@PathVariable Long userId) {
         return commentService.getCommentsByUser(userId);
     }
+
+    @GetMapping("/average-rating/{productId}")
+    public double getAverageRating(@PathVariable Long productId) {
+        return commentService.getAverageRatingByProductId(productId);
+    }
+
+    @PostMapping("/add-rating")
+    public String addRating(@RequestBody Map<String, Object> request) {
+        Long userId = Long.valueOf(request.get("userId").toString());
+        Long productId = Long.valueOf(request.get("productId").toString());
+        int rating = Integer.parseInt(request.get("rating").toString());
+
+        return commentService.addRating(userId, productId, rating);
+    }
+
+    @GetMapping("/ratings/user/{userId}")
+    public List<Integer> getRatingsByUser(@PathVariable Long userId) {
+        return commentService.getRatingsByUserId(userId);
+    }
+
+    @GetMapping("/ratings/product/{productId}")
+    public List<Integer> getRatingsByProduct(@PathVariable Long productId) {
+        return commentService.getRatingsByProductId(productId);
+    }
+
+
 }
