@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { addToBackendCart } from "../api/api";
+
+import {
+  fetchWishlist,
+  addToWishlist,
+  removeFromWishlist,
+} from "../redux/wishlistSLice";
 
 // Example images imports...
 import iphone16Image from "../img/iphone16image.webp";
@@ -21,6 +26,8 @@ const Productdetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
+
+  const wishlistItems = useSelector((state) => state.wishlist.items || []);
 
   // State definitions
   const [productData, setProductData] = useState(null);
@@ -52,6 +59,12 @@ const Productdetails = () => {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    if (currentUser?.id) {
+      dispatch(fetchWishlist(currentUser.id));
+    }
+  }, [currentUser?.id, dispatch]);
+
   if (!productData) {
     return (
       <div className="text-center p-10 text-white">
@@ -59,6 +72,10 @@ const Productdetails = () => {
       </div>
     );
   }
+
+  const isInWishlist = wishlistItems.some(
+      (w) => w.product.id === productData?.id
+  );
 
   // Handle "Add to Cart" and then navigate to the cart page
   const handleAddToCart = async () => {
@@ -74,6 +91,32 @@ const Productdetails = () => {
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
+  };
+
+  const toggleWishlist = async () => {
+    if (!currentUser?.id || !productData?.id) return;
+
+    if (isInWishlist) {
+      await dispatch(
+          removeFromWishlist({
+            userId: currentUser.id,
+            productId: productData.id,
+          })
+      ).unwrap();
+    } else {
+      await dispatch(
+          addToWishlist({
+            userId: currentUser.id,
+            productId: productData.id,
+          })
+      ).unwrap();
+    }
+  };
+
+  const handleBuyNow = () => {
+    // optional: also add the item to cart first
+    dispatch(addToCart({ product: productData, quantity }));
+    navigate("/checkout");
   };
 
   const totalPrice = productData.price * quantity;
@@ -227,22 +270,37 @@ const Productdetails = () => {
         <span className="cursor-pointer hover:underline">{productData.name}</span>
       </nav>
 
-      {/* Product Details Container */}
+      {/* Main card */}
       <div className="flex flex-col md:flex-row gap-8 bg-white p-6 rounded-lg">
-        {/* Left Column: Thumbnails + Main Image */}
+        {/* left thumbnails */}
         <div className="flex-shrink-0 w-full md:w-96">
           <div className="flex space-x-2 mb-4">
-            <img src={iphone16Thumb1} alt="Thumbnail 1" className="w-16 h-16 border rounded cursor-pointer" />
-            <img src={iphone16Thumb2} alt="Thumbnail 2" className="w-16 h-16 border rounded cursor-pointer" />
-            <img src={iphone16Thumb3} alt="Thumbnail 3" className="w-16 h-16 border rounded cursor-pointer" />
+            <img src={iphone16Thumb1} alt="" className="w-16 h-16 border rounded"/>
+            <img src={iphone16Thumb2} alt="" className="w-16 h-16 border rounded"/>
+            <img src={iphone16Thumb3} alt="" className="w-16 h-16 border rounded"/>
           </div>
-          <img className="w-full h-auto border border-gray-200 rounded" src={iphone16Image} alt={productData.name} />
+          <img src={iphone16Image} alt={productData.name}
+               className="w-full h-auto border border-gray-200 rounded"/>
         </div>
 
-        {/* Right Column: Product Info */}
+        {/* right info */}
         <div className="flex-1 flex flex-col justify-between">
-          <div className="mb-2">
-            <h1 className="text-2xl font-semibold text-white">{productData.name}</h1>
+          {/* title + wishlist */}
+          <div className="flex items-center gap-3 mb-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {productData.name}
+            </h1>
+            <button onClick={toggleWishlist} className="focus:outline-none">
+              <span
+                  className={
+                      "text-5xl leading-none transition-transform hover:scale-110 " +
+                      (isInWishlist
+                          ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent cursor-pointer"
+                          : "text-gray-300 cursor-pointer")
+                  }>
+                {isInWishlist ? "♥" : "♡"}
+              </span>
+            </button>
           </div>
           <div className="mb-4">
             <p className="text-3xl font-bold text-black">${productData.price}</p>
@@ -262,7 +320,7 @@ const Productdetails = () => {
               type="number"
                   min="1"
                   max="99"
-             
+
               value={quantity}
               onChange={handleQuantityChange}
               onBlur={handleQuantityBlur}
@@ -288,23 +346,18 @@ const Productdetails = () => {
           <div className="text-lg font-bold mb-4">Total: ${totalPrice.toFixed(2)}</div>
           <div className="flex space-x-4">
             <button
-              onClick={handleAddToCart}
-              className="bg-gradient-to-b from-black to-purple-900 text-white px-6 py-2 rounded transition cursor-pointer hover:scale-105 hover:brightness-110"
+                onClick={handleAddToCart}
+                className="bg-gradient-to-b from-black to-purple-900 text-white font-semibold px-6 py-2 rounded transition cursor-pointer hover:scale-105 hover:brightness-110"
             >
               Add to Cart
             </button>
-            <Link
-              to="/cart"
-              className="bg-gradient-to-b from-black to-purple-900 text-white px-6 py-2 rounded transition cursor-pointer hover:scale-105 hover:brightness-110"
-            >
-              Go to Shopping Cart
-            </Link>
+
             <button
-              onClick={() => console.log("Add to Wishlist clicked")}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg transition cursor-pointer hover:scale-105 hover:opacity-90"
-            >
-              💖 Add to Wishlist
+                onClick={handleBuyNow}
+                className="bg-gradient-to-b from-purple-500 to-purple-700 text-white font-semibold px-6 py-2 rounded shadow hover:scale-105 hover:brightness-110 transition cursor-pointer">
+              Buy Now
             </button>
+
           </div>
         </div>
       </div>
@@ -312,11 +365,11 @@ const Productdetails = () => {
       {/* Accordion Sections */}
       <div className="mt-8 border-t border-gray-300 pt-2">
         {accordionSections.map((section, index) => (
-          <div key={index} className="border-b border-gray-200 mb-2">
+            <div key={index} className="border-b border-gray-200 mb-2">
             <button
-              className="cursor-pointer w-full text-left py-2 px-2 flex items-center justify-between focus:outline-none"
-              onClick={() => toggleAccordion(index)}
-            >
+                  className="cursor-pointer w-full text-left py-2 px-2 flex items-center justify-between focus:outline-none"
+                  onClick={() => toggleAccordion(index)}
+              >
               <span className="font-medium text-white">{section.title}</span>
               <span className="text-white">
                 <svg

@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import BannerCarousel from "../components/BannerCarousel"; // or your own banner
+import BannerCarousel from "../components/BannerCarousel";
+
+import { useSelector, useDispatch } from "react-redux";
+import {
+    fetchWishlist,
+    addToWishlist,
+    removeFromWishlist,
+} from "../redux/wishlistSLice";
+
 import puzzleImage from "../img/puzzle.jpeg";
 import vacuumCleanerImage from "../img/vacuumcleaner.jpeg";
 import disneyImage from "../img/disney.jpeg";
@@ -127,37 +135,47 @@ const Banner = () => (
   </div>
 );
 
-const ProductCard = ({ product }) => (
-  <div className="border p-4 rounded-2xl shadow-lg w-72 bg-white transition-transform transform hover:scale-105 hover:shadow-xl">
-    <div className="relative w-full h-44">
-      <img
-        src={product.imageUrl ? product.imageUrl : "default_product_image.png"}
-        alt={product.name}
-        className="w-full h-full object-cover rounded-xl"
-      />
-      {product.oldPrice && (
-        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-lg">
-          Endirim!
-        </span>
-      )}
-    </div>
-    <h3 className="font-semibold mt-3 text-gray-800 text-lg">
-      {product.name}
-    </h3>
-    <p className="text-xl font-bold text-red-500 mt-1">{product.price} $</p>
+const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
+    <div className="border p-4 rounded-2xl shadow-lg w-72 bg-white transition-transform hover:scale-105 hover:shadow-xl relative">
+        {/* Heart */}
+        <button
+            onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
+            className="absolute  top-2 right-2 focus:outline-none ">
+      <span
+          className={
+              "text-3xl select-none " +
+              (isInWishlist
+                  ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent cursor-pointer"
+                  : "text-gray-300 cursor-pointer")
+          }>
+        {isInWishlist ? "♥" : "♡"}
+      </span>
+        </button>
 
-    {/* “View” or “Buy” button leads to Productdetails page at /product/:id */}
-    <Link to={`/product/${product.id}`}>
-      <button className="mt-4 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-lg text-lg font-semibold transition hover:opacity-90">
-        Bir kliklə al
-      </button>
-    </Link>
-  </div>
+        {/* Image */}
+        <div className="relative w-full h-44">
+            <img
+                src={product.imageUrl || "default_product_image.png"}
+                alt={product.name}
+                className="w-full h-full object-cover rounded-xl"
+            />
+        </div>
+
+        {/* Text */}
+        <h3 className="font-semibold mt-3 text-gray-800 text-lg">{product.name}</h3>
+        <p className="text-xl font-bold text-red-500 mt-1">${product.price}</p>
+
+        {/* View / Buy */}
+        <Link to={`/product/${product.id}`}>
+            <button className="mt-4 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-lg text-lg font-semibold hover:opacity-90">
+                Bir kliklə al
+            </button>
+        </Link>
+    </div>
 );
 
 
-
-const ProductTabsSection = ({ selectedCategory }) => {
+const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist  }) => {
   const [activeTab, setActiveTab] = useState("All Products");
   const [backendProducts, setBackendProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -234,7 +252,12 @@ const ProductTabsSection = ({ selectedCategory }) => {
           <div className="grid grid-cols-4 gap-6 mt-6">
             {sorted.length > 0 ? (
               sorted.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                    key={product.id}
+                    product={product}
+                    isInWishlist={wishlistIds.has(product.id)}
+                    toggleWishlist={toggleWishlist}
+                />
               ))
             ) : (
               <div className="col-span-4 flex flex-col items-center justify-center py-10 bg-white rounded-lg shadow-md border border-gray-200">
@@ -259,16 +282,33 @@ const ProductTabsSection = ({ selectedCategory }) => {
 };
 
 const Home = () => {
+    const [selectedCategory, setSelectedCategory] = useState("");
 
-  const [selectedCategory, setSelectedCategory] = useState("");
+    // ---- wishlist wiring ----
+    const dispatch     = useDispatch();
+    const currentUser  = useSelector((s) => s.user.currentUser);
+    const wishlistItems= useSelector((s) => s.wishlist.items || []);
+    const wishlistIds  = new Set(wishlistItems.map((w) => w.product.id));
 
+    useEffect(() => {
+        if (currentUser?.id) dispatch(fetchWishlist(currentUser.id));
+    }, [currentUser?.id, dispatch]);
+
+    const toggleWishlist = (productId) => {
+        if (!currentUser?.id) return;             // user not logged in
+        if (wishlistIds.has(productId)) {
+            dispatch(removeFromWishlist({ userId: currentUser.id, productId }));
+        } else {
+            dispatch(addToWishlist({    userId: currentUser.id, productId }));
+        }
+    };
 
   return (
     <div className="border-t-1 border-white p-10 bg-gradient-to-b from-black to-purple-900">
       {/* Example: Button to go to Cart near top */}
       <div className="mb-6">
         <Link
-          to="/cart"
+          to="/wishlist"
           className="inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
         >
           Wishlist
@@ -282,7 +322,11 @@ const Home = () => {
           <BannerCarousel />
         </div>
       </div>
-      <ProductTabsSection selectedCategory={selectedCategory} />
+      <ProductTabsSection
+          selectedCategory={selectedCategory}
+          wishlistIds={wishlistIds}
+          toggleWishlist={toggleWishlist}
+      />
     </div>
   );
 };

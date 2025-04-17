@@ -6,10 +6,11 @@ import axios from "axios";
 import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
-import ProductDetails from "./pages/ProductDetails";
+import ProductDetails from "./pages/Productdetails";
 import ShoppingCart from "./pages/ShoppingCart";
 import ClientProfile from "./pages/ClientProfile";
-import ClientOrders from "./pages/ClientOrders.jsx"; // Ensure this path is correct
+import ClientOrders from "./pages/ClientOrders.jsx";
+import ClientWishlist from "./pages/ClientWishlist.jsx";
 
 import { clearCart } from "./redux/cartSlice";
 import { logout } from "./redux/user/userSlice";
@@ -97,6 +98,7 @@ function App() {
           <Route path="/profile" element={<ClientProfile />} />
           <Route path="/clientorders" element={<ClientOrders />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/wishlist" element={<ClientWishlist/>} />
         </Routes>
       </Router>
   );
