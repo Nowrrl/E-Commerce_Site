@@ -1,26 +1,43 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
-import ProductDetails from "./pages/ProductDetails";
+import ProductDetails from "./pages/Productdetails";
+import CategoryPage from './pages/CategoryPage';
 import ShoppingCart from "./pages/ShoppingCart";
 import ClientProfile from "./pages/ClientProfile";
-import ClientOrders from "./pages/ClientOrders.jsx"; // Ensure this path is correct
+import ClientOrders from "./pages/ClientOrders";
+import Checkout from "./pages/Checkout";
 
 import { clearCart } from "./redux/cartSlice";
 import { logout } from "./redux/user/userSlice";
 import { setCartFromBackend } from "./redux/cartSlice";
-import Checkout from "./pages/Checkout.jsx";
 
 function App() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
 
-  // Load cart when user changes
+  const [products, setProducts] = useState([]);
+
+  // Load products once
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("http://localhost:8085/products");
+        setProducts(res.data);
+      } catch (err) {
+        console.error("Failed to load products:", err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Load cart when user logs in
   useEffect(() => {
     const fetchCart = async () => {
       if (!currentUser?.id) return;
@@ -31,13 +48,13 @@ function App() {
         });
 
         const cartItems = await Promise.all(
-            response.data.map(async (item) => {
-              const productRes = await axios.get(`http://localhost:8085/products/${item.productId}`);
-              return {
-                product: productRes.data,
-                quantity: item.quantity
-              };
-            })
+          response.data.map(async (item) => {
+            const productRes = await axios.get(`http://localhost:8085/products/${item.productId}`);
+            return {
+              product: productRes.data,
+              quantity: item.quantity
+            };
+          })
         );
 
         dispatch(setCartFromBackend(cartItems));
@@ -50,55 +67,51 @@ function App() {
   }, [currentUser, dispatch]);
 
   const handleLogout = () => {
-    dispatch(clearCart());       // clear cart from Redux + localStorage
-    dispatch(logout());          // reset user state
-    window.location.href = "/login"; // safely redirect
+    dispatch(clearCart());
+    dispatch(logout());
+    window.location.href = "/login";
   };
 
   return (
-      <Router>
-        <nav className="bg-[#0C0C0E] text-white py-4 shadow-lg">
-          <div className="container mx-auto flex justify-between items-center px-6">
-            <h1 className="font-bold text-3xl">
-              <Link to="/">Smart Electronics</Link>
-            </h1>
-            <div className="space-x-6 flex items-center">
-              <Link to="/cart">Cart</Link>
-              <Link to="/">Home</Link>
-              <Link to="/profile">My Profile</Link>
-              <span>
-              Logged in as:{" "}
-                {currentUser?.username ? currentUser.username : "Guest"}
+    <Router>
+      <nav className="bg-[#0C0C0E] text-white py-4 shadow-lg">
+        <div className="container mx-auto flex justify-between items-center px-6">
+          <h1 className="font-bold text-3xl">
+            <Link to="/">Smart Electronics</Link>
+          </h1>
+          <div className="space-x-6 flex items-center">
+            <Link to="/cart">Cart</Link>
+            <Link to="/">Home</Link>
+            <Link to="/profile">My Profile</Link>
+            <span>
+              Logged in as: {currentUser?.username ? currentUser.username : "Guest"}
             </span>
-              {currentUser?.username && currentUser.username !== "Guest" ? (
-                  <button onClick={handleLogout} className="hover:underline">
-                    Logout
-                  </button>
-              ) : (
-                  <>
-                    <Link to="/login" className="hover:underline">
-                      Login
-                    </Link>
-                    <Link to="/register" className="hover:underline">
-                      Register
-                    </Link>
-                  </>
-              )}
-            </div>
+            {currentUser?.username && currentUser.username !== "Guest" ? (
+              <button onClick={handleLogout} className="hover:underline">
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link to="/login" className="hover:underline">Login</Link>
+                <Link to="/register" className="hover:underline">Register</Link>
+              </>
+            )}
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<ShoppingCart />} />
-          <Route path="/profile" element={<ClientProfile />} />
-          <Route path="/clientorders" element={<ClientOrders />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<Home products={products} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/profile" element={<ClientProfile />} />
+        <Route path="/clientorders" element={<ClientOrders />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/category/:category" element={<CategoryPage productData={products} />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -222,7 +222,12 @@ const Productdetails = () => {
       <nav className="mb-4 text-sm text-white flex items-center space-x-2">
         <Link to="/" className="hover:underline cursor-pointer">Home</Link>
         <span className="cursor-pointer hover:underline">&raquo;</span>
-        <Link to="/smartphones" className="hover:underline cursor-pointer">Smartphones</Link>
+        <Link
+          to={`/category/${product.category.toLowerCase()}`}
+          className="hover:underline text-purple-600"
+        >
+          {product.category}
+        </Link>
         <span className="cursor-pointer hover:underline">&raquo;</span>
         <span className="cursor-pointer hover:underline">{productData.name}</span>
       </nav>
@@ -236,7 +241,7 @@ const Productdetails = () => {
             <img src={iphone16Thumb2} alt="Thumbnail 2" className="w-16 h-16 border rounded cursor-pointer" />
             <img src={iphone16Thumb3} alt="Thumbnail 3" className="w-16 h-16 border rounded cursor-pointer" />
           </div>
-          <img className="w-full h-auto border border-gray-200 rounded" src={iphone16Image} alt={productData.name} />
+          <img className="w-full h-auto border border-gray-200 rounded" src={productData.imageUrl} alt={productData.name} />
         </div>
 
         {/* Right Column: Product Info */}
@@ -260,9 +265,9 @@ const Productdetails = () => {
             <input
               id="quantity"
               type="number"
-                  min="1"
-                  max="99"
-             
+              min="1"
+              max="99"
+
               value={quantity}
               onChange={handleQuantityChange}
               onBlur={handleQuantityBlur}
