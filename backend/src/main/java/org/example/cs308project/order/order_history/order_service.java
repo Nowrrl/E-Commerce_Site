@@ -35,6 +35,10 @@ public class order_service {
         }
         return null;
     }
+    public order_model createOrder(order_model newOrder) {
+        return orderRepository.save(newOrder);
+    }
+
 
     public List<order_model> getAllOrders() {
         return orderRepository.findAll();

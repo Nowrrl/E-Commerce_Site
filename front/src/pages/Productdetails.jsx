@@ -9,7 +9,7 @@ import {
   fetchWishlist,
   addToWishlist,
   removeFromWishlist,
-} from "../redux/wishlistSLice";
+} from "../redux/wishlistSlice";
 
 // Example images imports...
 import iphone16Image from "../img/iphone16image.webp";
@@ -31,7 +31,8 @@ const Productdetails = () => {
 
   // State definitions
   const [productData, setProductData] = useState(null);
-  const [quantity, setQuantity] = useState("1");
+  const [quantity, setQuantity] = useState(1);
+
   const [installment, setInstallment] = useState("3");
   // Use an array state so multiple accordion sections can be toggled independently.
   const [openIndexes, setOpenIndexes] = useState([]);
@@ -120,7 +121,8 @@ const Productdetails = () => {
   };
 
   const totalPrice = productData.price * quantity;
-  const monthlyInstallment = totalPrice / parseInt(installment, 10);
+const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
+
 
   // Define accordion sections
   const accordionSections = [
@@ -242,11 +244,12 @@ const Productdetails = () => {
     setNewReview({ rating: 5, text: "" });
   };
   const handleQuantityChange = (e) => {
-    const val = e.target.value;
-    if (/^\d{0,2}$/.test(val)) { // allow only 0-2 digit numbers
+    const val = parseInt(e.target.value, 10);
+    if (!isNaN(val) && val >= 1 && val <= 99) {
       setQuantity(val);
     }
   };
+  
 
   const handleQuantityBlur = () => {
     const num = parseInt(quantity, 10);
@@ -313,21 +316,19 @@ const Productdetails = () => {
               Warranty: <span className="font-medium">{productData.warrantyStatus}</span>
             </p>
           </div>
-          <div className="flex items-center space-x-2 mb-4">
-            <label htmlFor="quantity" className="font-medium">Quantity:</label>
-            <input
-              id="quantity"
-              type="number"
-                  min="1"
-                  max="99"
+          <div className="flex items-center gap-2 mt-4">
+  <label htmlFor="quantity" className="text-sm font-medium">Quantity:</label>
+  <input
+    type="number"
+    id="quantity"
+    min="1"
+    max="99"
+    value={quantity}
+    onChange={handleQuantityChange}
+    className="w-16 px-2 py-1 border rounded-md"
+  />
+</div>
 
-              value={quantity}
-              onChange={handleQuantityChange}
-              onBlur={handleQuantityBlur}
-              className="w-12 border rounded px-2 py-1 text-center"
-            />
-
-          </div>
           <div className="flex items-center space-x-2 mb-4">
             <label htmlFor="installment" className="font-medium">Installments:</label>
             <select

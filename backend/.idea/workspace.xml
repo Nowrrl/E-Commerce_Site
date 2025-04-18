@@ -5,41 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/wishlist/wishlist_controller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/wishlist/wishlist_model.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/wishlist/wishlist_repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/wishlist/wishlist_service.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/wishlist/wishlist_controller.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/wishlist/wishlist_model.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/wishlist/wishlist_repository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/wishlist/wishlist_service.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front/src/pages/ClientWishlist.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front/src/redux/wishlistSlice.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/Cs308ProjectApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/Cs308ProjectApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_repository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/corsconfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/controller/user_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/controller/user_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/login_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/login_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/register_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/register_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/workers_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/model/workers_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/login_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/login_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/register_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/register_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/workers_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/repository/workers_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/login_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/login_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/register_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/register_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/workers_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/loginregister/service/workers_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_service.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_repository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/shoppingcart/cart_service.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/node_modules/vite/bin/vite.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front/node_modules/vite/bin/vite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/CategoryPage.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/Checkout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Checkout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/Productdetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Productdetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/redux/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/redux/store.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +52,10 @@
     &quot;accountId&quot;: &quot;1d1d9227-76fa-4ab2-a8c3-855332f8ea02&quot;
   }
 }</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -78,9 +73,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.Cs308ProjectApplication.executor": "Run",
-    "git-widget-placeholder": "murad",
+    "git-widget-placeholder": "Merging murad",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/murad/Documents/Desktop/Sabanci University/software/project/project_copy2/CS308Project/backend",
+    "last_opened_file_path": "C:/Users/kunal/CS308Project/front",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -120,8 +116,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
       </set>
     </attachedChunks>
   </component>
@@ -143,7 +139,8 @@
       <workItem from="1743219641962" duration="4885000" />
       <workItem from="1743310991996" duration="3519000" />
       <workItem from="1744726064032" duration="2240000" />
-      <workItem from="1744745808018" duration="2636000" />
+      <workItem from="1744872446973" duration="1174000" />
+      <workItem from="1744886693282" duration="1275000" />
     </task>
     <servers />
   </component>

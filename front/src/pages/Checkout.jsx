@@ -37,15 +37,29 @@ function Checkout() {
     }
 
     try {
-      if (currentUser?.id) {
-        await clearBackendCart(currentUser.id); // clear backend
+      const response = await fetch(
+        `http://localhost:8085/checkout?userId=${currentUser.id}&deliveryAddress=${encodeURIComponent(
+          formData.address
+        )}`,
+        {
+          method: "POST"
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Backend error:", errorText);
+        throw new Error("Checkout failed");
       }
-      dispatch(clearCart()); // clear frontend
+
+      if (currentUser?.id) await clearBackendCart(currentUser.id);
+      dispatch(clearCart());
+
       alert("Order placed successfully!");
-      navigate("/"); // redirect to home or order success page
+      navigate("/");
     } catch (error) {
       console.error("Error placing order:", error);
-      alert("There was an error processing your order.");
+      alert("There was an error processing your order. Please check console.");
     }
   };
 
@@ -53,16 +67,13 @@ function Checkout() {
     <div className="min-h-screen bg-gradient-to-b from-purple-800 to-black p-6 text-white">
       <h1 className="text-3xl font-bold mb-6 text-center">Checkout</h1>
       <div className="max-w-3xl mx-auto bg-white text-black rounded-xl shadow-xl p-6 grid md:grid-cols-2 gap-6">
-        {/* Order Summary */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
           {cartItems.map((item, index) => (
             <div key={index} className="flex justify-between py-2 border-b">
               <div>
                 <p>{item.product.name}</p>
-                <p className="text-sm text-gray-600">
-                  Qty: {item.quantity}
-                </p>
+                <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
               </div>
               <p>${(item.product.price * item.quantity).toFixed(2)}</p>
             </div>
@@ -72,7 +83,6 @@ function Checkout() {
           </div>
         </div>
 
-        {/* Payment Form */}
         <form onSubmit={handlePlaceOrder} className="space-y-4">
           <h2 className="text-xl font-semibold mb-2">Payment & Shipping</h2>
 
