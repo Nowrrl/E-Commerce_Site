@@ -7,7 +7,6 @@ import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
 import ProductDetails from "./pages/Productdetails";
-import CategoryPage from './pages/CategoryPage';
 import ShoppingCart from "./pages/ShoppingCart";
 import ClientProfile from "./pages/ClientProfile";
 import ClientOrders from "./pages/ClientOrders";
@@ -109,7 +108,6 @@ function App() {
         <Route path="/profile" element={<ClientProfile />} />
         <Route path="/clientorders" element={<ClientOrders />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/category/:category" element={<CategoryPage productData={products} />} />
       </Routes>
     </Router>
   );
