@@ -1,3 +1,4 @@
+// src/store/user/userSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 // Detect if current path is admin
