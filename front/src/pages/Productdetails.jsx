@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import axios from "axios";
 import { addToCart } from "../redux/cartSlice";
 import { addToBackendCart } from "../api/api";
@@ -21,13 +22,27 @@ import otherProduct2 from "../img/iphone16image.webp";
 import otherProduct3 from "../img/iphone16image.webp";
 import otherProduct4 from "../img/iphone16image.webp";
 
+
 const Productdetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
+  const buildImgSrc = (raw) => {
+    // fallback placeholder in case the product has no image
+    if (!raw) return "/products_images/default_product_image.png";
+    // ^ put that file in front/public/products_images if you don't have one yet
+
+    // raw already contains "http://…" → leave it
+    if (raw.startsWith("http")) return raw;
+
+    // otherwise it's a relative path like "/products_images/iphone15.jpg"
+    // We want the React dev‑server to serve it, so return it untouched
+    return raw;
+  };
 
   const wishlistItems = useSelector((state) => state.wishlist.items || []);
+
 
   // State definitions
   const [productData, setProductData] = useState(null);
@@ -37,28 +52,50 @@ const Productdetails = () => {
   // Use an array state so multiple accordion sections can be toggled independently.
   const [openIndexes, setOpenIndexes] = useState([]);
   const [comments, setComments] = useState(null);
-  const [newComment, setNewComment] = useState("");
-  const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState({ rating: 5, text: "" });
+  const [otherProducts, setOtherProducts] = useState([]);
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartQuantityForThisProduct =
+    cartItems.find((item) => item.product.id === parseInt(id))?.quantity || 0;
+  const availableStock = productData ? productData.quantity - cartQuantityForThisProduct : 0;
 
-  // Fetch product and comments data on mount / id change
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productResponse, commentsResponse] = await Promise.all([
-          axios.get(`http://localhost:8085/products/${id}`),
-          axios.get(`http://localhost:8085/comments/product/${id}`)
-        ]);
-        setProductData(productResponse.data);
-        setComments(commentsResponse.data);
-        console.log("Comments fetched:", commentsResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const productRes = await axios.get(`http://localhost:8085/products/${id}`);
+        if (!productRes.data.approvedBySales) {
+          // Redirect user away if not approved
+          navigate("/");
+          return;
+        }
+        const approvedCommentsRes = await axios.get(`http://localhost:8085/comments/product/${id}`);
+
+        const approvedComments = approvedCommentsRes.data;
+        setComments(approvedComments);
+        setProductData(productRes.data);
+
+        // Optional: update local storage for viewed products
+        const viewed = JSON.parse(localStorage.getItem("viewedProducts")) || [];
+        const exists = viewed.find((p) => p.id === productRes.data.id);
+        if (!exists) {
+          const updated = [productRes.data, ...viewed].slice(0, 20);
+          localStorage.setItem("viewedProducts", JSON.stringify(updated));
+        }
+
+        /* ── 2. fetch all products, pick 4 others from the same category ── */
+        const allRes = await axios.get("http://localhost:8085/products/all");
+        const similar = allRes.data
+          .filter(p => p.category?.name === productRes.data.category?.name && p.id !== productRes.data.id)
+          .slice(0, 4);                     // keep only four
+
+        setOtherProducts(similar);
+      } catch (err) {
+        console.error("Error fetching product‑details data:", err);
       }
     };
 
     fetchData();
   }, [id]);
+
 
   useEffect(() => {
     if (currentUser?.id) {
@@ -74,8 +111,9 @@ const Productdetails = () => {
     );
   }
 
+
   const isInWishlist = wishlistItems.some(
-      (w) => w.product.id === productData?.id
+    (w) => w.product.id === productData?.id
   );
 
   // Handle "Add to Cart" and then navigate to the cart page
@@ -99,29 +137,26 @@ const Productdetails = () => {
 
     if (isInWishlist) {
       await dispatch(
-          removeFromWishlist({
-            userId: currentUser.id,
-            productId: productData.id,
-          })
+        removeFromWishlist({
+          userId: currentUser.id,
+          productId: productData.id,
+        })
       ).unwrap();
     } else {
       await dispatch(
-          addToWishlist({
-            userId: currentUser.id,
-            productId: productData.id,
-          })
+        addToWishlist({
+          userId: currentUser.id,
+          productId: productData.id,
+        })
       ).unwrap();
     }
   };
 
-  const handleBuyNow = () => {
-    // optional: also add the item to cart first
-    dispatch(addToCart({ product: productData, quantity }));
-    navigate("/checkout");
-  };
+
 
   const totalPrice = productData.price * quantity;
-const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
+  const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
+
 
 
   // Define accordion sections
@@ -199,57 +234,15 @@ const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
     }
   };
 
-  const otherProducts = [
-    { id: 1, img: otherProduct1, name: "iPhone 15" },
-    { id: 2, img: otherProduct2, name: "iPhone 14" },
-    { id: 3, img: otherProduct3, name: "iPhone 13" },
-    { id: 4, img: otherProduct4, name: "iPhone 12" },
-  ];
-
-  // Handle comment submission
-  const handleCommentSubmit = async () => {
-    if (newComment.trim() === "") return;
-    try {
-      const userId = currentUser?.id;
-      const productId = productData.id;
-      const response = await axios.post("http://localhost:8085/comments/add", null, {
-        params: { userId, productId, text: newComment, rating: 5 },
-      });
-      const savedComment = response.data;
-      setComments((prevComments) => [
-        ...prevComments,
-        { user: { username: currentUser?.username || "Anonymous" }, text: savedComment.text },
-      ]);
-      setNewComment("");
-    } catch (error) {
-      console.error("Failed to submit comment:", error);
-    }
-  };
-
-  // Check if the current user already submitted a review
-  const hasReviewed = reviews.some((review) => review.user === currentUser?.username);
-
-  const handleReviewSubmit = () => {
-    if (hasReviewed) {
-      alert("You have already submitted a review.");
-      return;
-    }
-    const newEntry = {
-      rating: newReview.rating,
-      user: currentUser?.username || "Anonymous",
-      text: newReview.text || "",
-    };
-    setReviews([...reviews, newEntry]);
-    alert("Review submitted!");
-    setNewReview({ rating: 5, text: "" });
-  };
   const handleQuantityChange = (e) => {
     const val = parseInt(e.target.value, 10);
-    if (!isNaN(val) && val >= 1 && val <= 99) {
-      setQuantity(val);
+    if (!isNaN(val)) {
+      if (val < 1) setQuantity(1);
+      else if (val > availableStock) setQuantity(availableStock); // 👈 limit to remaining stock
+      else setQuantity(val);
     }
   };
-  
+
 
   const handleQuantityBlur = () => {
     const num = parseInt(quantity, 10);
@@ -267,23 +260,37 @@ const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
       {/* Breadcrumbs */}
       <nav className="mb-4 text-sm text-white flex items-center space-x-2">
         <Link to="/" className="hover:underline cursor-pointer">Home</Link>
-        <span className="cursor-pointer hover:underline">&raquo;</span>
-        <Link to="/smartphones" className="hover:underline cursor-pointer">Smartphones</Link>
-        <span className="cursor-pointer hover:underline">&raquo;</span>
-        <span className="cursor-pointer hover:underline">{productData.name}</span>
+        <span className="cursor-pointer">&raquo;</span>
+        <Link
+          to={`/category/${productData.category?.name?.toLowerCase() || "unknown"}`}
+          className="hover:underline cursor-pointer"
+        >
+          {productData.category?.name || "Category"}
+        </Link>
+        <span className="cursor-pointer">&raquo;</span>
+        <span>{productData.name}</span>
       </nav>
+
+
 
       {/* Main card */}
       <div className="flex flex-col md:flex-row gap-8 bg-white p-6 rounded-lg">
         {/* left thumbnails */}
         <div className="flex-shrink-0 w-full md:w-96">
           <div className="flex space-x-2 mb-4">
-            <img src={iphone16Thumb1} alt="" className="w-16 h-16 border rounded"/>
-            <img src={iphone16Thumb2} alt="" className="w-16 h-16 border rounded"/>
-            <img src={iphone16Thumb3} alt="" className="w-16 h-16 border rounded"/>
+            <img src={buildImgSrc(productData.imageUrl)} alt="Thumbnail 1" className="w-16 h-16 border rounded" />
+            <img src={buildImgSrc(productData.imageUrl)} alt="Thumbnail 2" className="w-16 h-16 border rounded" />
+            <img src={buildImgSrc(productData.imageUrl)} alt="Thumbnail 3" className="w-16 h-16 border rounded" />
           </div>
-          <img src={iphone16Image} alt={productData.name}
-               className="w-full h-auto border border-gray-200 rounded"/>
+          <img
+            src={buildImgSrc(productData.imageUrl)}
+            alt={productData.name}
+            className="w-full h-auto border border-gray-200 rounded"
+            onError={(e) => {
+              e.target.src = "/products_images/default_product_image.png"; // fallback image
+            }}
+          />
+
         </div>
 
         {/* right info */}
@@ -295,12 +302,12 @@ const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
             </h1>
             <button onClick={toggleWishlist} className="focus:outline-none">
               <span
-                  className={
-                      "text-5xl leading-none transition-transform hover:scale-110 " +
-                      (isInWishlist
-                          ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent cursor-pointer"
-                          : "text-gray-300 cursor-pointer")
-                  }>
+                className={
+                  "text-5xl leading-none transition-transform hover:scale-110 " +
+                  (isInWishlist
+                    ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent cursor-pointer"
+                    : "text-gray-300 cursor-pointer")
+                }>
                 {isInWishlist ? "♥" : "♡"}
               </span>
             </button>
@@ -316,65 +323,81 @@ const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
               Warranty: <span className="font-medium">{productData.warrantyStatus}</span>
             </p>
           </div>
-          <div className="flex items-center gap-2 mt-4">
-  <label htmlFor="quantity" className="text-sm font-medium">Quantity:</label>
-  <input
-    type="number"
-    id="quantity"
-    min="1"
-    max="99"
-    value={quantity}
-    onChange={handleQuantityChange}
-    className="w-16 px-2 py-1 border rounded-md"
-  />
-</div>
-
-          <div className="flex items-center space-x-2 mb-4">
-            <label htmlFor="installment" className="font-medium">Installments:</label>
-            <select
-              id="installment"
-              value={installment}
-              onChange={(e) => setInstallment(e.target.value)}
-              className="border rounded px-2 py-1 cursor-pointer"
-            >
-              <option value="1">1 Month</option>
-              <option value="3">3 Months</option>
-              <option value="6">6 Months</option>
-              <option value="12">12 Months</option>
-            </select>
-            <span className="font-bold text-gray-600">${monthlyInstallment.toFixed(2)} / month</span>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-6 mb-4">
+            <div className="flex items-center gap-2 mb-2 sm:mb-0">
+              <label htmlFor="quantity" className="text-sm font-medium">Quantity:</label>
+              <input
+                type="number"
+                id="quantity"
+                min="1"
+                max="99"
+                value={quantity}
+                onChange={handleQuantityChange}
+                className="w-16 px-2 py-1 border rounded-md"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="installment" className="font-medium">Installments:</label>
+              <select
+                id="installment"
+                value={installment}
+                onChange={(e) => setInstallment(e.target.value)}
+                className="border rounded px-2 py-1 cursor-pointer"
+              >
+                <option value="1">1 Month</option>
+                <option value="3">3 Months</option>
+                <option value="6">6 Months</option>
+                <option value="12">12 Months</option>
+              </select>
+              <span className="font-bold text-gray-600">${monthlyInstallment.toFixed(2)} / month</span>
+            </div>
           </div>
+
           <div className="text-lg font-bold mb-4">Total: ${totalPrice.toFixed(2)}</div>
-          <div className="flex space-x-4">
-            <button
+          {productData.quantity > 0 ? (
+            <div className="flex space-x-4">
+              <button
                 onClick={handleAddToCart}
-                className="bg-gradient-to-b from-black to-purple-900 text-white font-semibold px-6 py-2 rounded transition cursor-pointer hover:scale-105 hover:brightness-110"
-            >
-              Add to Cart
-            </button>
+                disabled={quantity > availableStock}
 
-            <button
-                onClick={handleBuyNow}
-                className="bg-gradient-to-b from-purple-500 to-purple-700 text-white font-semibold px-6 py-2 rounded shadow hover:scale-105 hover:brightness-110 transition cursor-pointer">
-              Buy Now
-            </button>
+                className={`px-6 py-2 rounded font-semibold transition cursor-pointer ${quantity > availableStock
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-gradient-to-b from-black to-purple-900 text-white hover:scale-105 hover:brightness-110"
+                  }`}
 
-          </div>
+              >
+                Add to Cart
+              </button>
+              {quantity > availableStock && (
+                <p className="text-sm text-red-600 mt-2">
+                  ⚠️ Only {availableStock} left you can add. You already have {cartQuantityForThisProduct} in your cart.
+                </p>
+              )}
+            </div>
+
+
+
+
+          ) : (
+            <div className="text-red-600 font-semibold mt-4">🚫 Out of Stock</div>
+          )}
+
+
         </div>
       </div>
 
       {/* Accordion Sections */}
       <div className="mt-8 border-t border-gray-300 pt-2">
         {accordionSections.map((section, index) => (
-            <div key={index} className="border-b border-gray-200 mb-2">
+          <div key={index} className="border-b border-gray-200 mb-2">
             <button
-                  className="cursor-pointer w-full text-left py-2 px-2 flex items-center justify-between focus:outline-none"
-                  onClick={() => toggleAccordion(index)}
-              >
+              className="cursor-pointer w-full text-left py-2 px-2 flex items-center justify-between focus:outline-none"
+              onClick={() => toggleAccordion(index)}
+            >
               <span className="font-medium text-white">{section.title}</span>
               <span className="text-white">
                 <svg
-                  className={`h-4 w-4 transform transition-transform duration-200 ${openIndexes.includes(index) ? "rotate-90" : ""}`}
+                  className={'h-4 w-4 transform transition-transform duration-200 ${openIndexes.includes(index) ? "rotate-90" : ""}'}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -386,146 +409,91 @@ const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
                 </svg>
               </span>
             </button>
-            <div className={`px-4 pb-4 overflow-hidden transition-all ease-in-out duration-300 ${openIndexes.includes(index) ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
+            <div className={'px-4 pb-4 overflow-hidden transition-all ease-in-out duration-300 ${openIndexes.includes(index) ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}'}>
               {section.content}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Other Products (Static) */}
-      <div className="mt-8">
-        <h2 className="text-lg text-white font-semibold mb-4">Other Products Viewed</h2>
-        <div className="flex space-x-4 overflow-x-auto pb-2">
+      {/* Other Products Viewed */}
+      <div className="mt-12">
+        <h2 className="text-xl font-bold text-white mb-4">🧾 Other Products You Might Like</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {otherProducts.map((product) => (
-            <div
+            <Link
+              to={`/product/${product.id}`}
               key={product.id}
-              className="min-w-[120px] flex flex-col items-center border border-white rounded p-2 transition-transform translate-x-1 translate-y-1 duration-200 hover:scale-105 cursor-pointer"
+              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 hover:scale-[1.02] cursor-pointer"
             >
-              <img src={product.img} alt={product.name} className="w-24 h-24 object-cover mb-2" />
-              <p className="text-sm text-white">{product.name}</p>
-            </div>
+              <div className="relative pt-[100%] overflow-hidden rounded-t-2xl bg-gray-100">
+                <img
+                  src={buildImgSrc(product.image_url || product.imageUrl)}
+                  alt={product.name}
+                  className="absolute top-0 left-0 w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-3">
+                <p className="text-gray-900 font-semibold text-sm truncate">{product.name}</p>
+                <p className="text-purple-700 font-bold text-base">${product.price}</p>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
 
+
+
+
+
       {/* Reviews & Comments Section */}
-      <div className="mt-8 border-t border-gray-300 pt-4 bg-white p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-6">Customer Reviews & Comments</h2>
+      <div className="mt-16 bg-white rounded-2xl shadow-2xl p-8">
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center border-b pb-4">🗣️ Customer Feedback</h2>
 
-        {/* Reviews Section */}
-        <div className="mb-10">
-          <h3 className="text-lg font-semibold mb-4 text-green-700">Leave a Review</h3>
-          {reviews.some((r) => r.user === currentUser?.username) ? (
-            <p className="text-yellow-300 mb-4">✅ You have already submitted a review.</p>
-          ) : (
-            <div className="flex flex-col space-y-2 mb-6">
-              <select
-                value={newReview.rating}
-                onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value, 10) })}
-                className="border border-gray-300 p-2 rounded w-32 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
+
+
+        {comments && comments.length > 0 ? (
+          <div className="grid sm:grid-cols-2 gap-4">
+            {comments.map((comment, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-gray-100 p-5 rounded-xl border-l-4 border-purple-500 shadow relative"
               >
-                {[5, 4, 3, 2, 1].map((star) => (
-                  <option key={star} value={star}>
-                    {star} Stars
-                  </option>
-                ))}
-              </select>
-              <textarea
-                className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Write your review here..."
-                value={newReview.text}
-                onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
-              />
-              <button
-                onClick={handleReviewSubmit}
-                className="self-start bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition cursor-pointer"
-              >
-                Submit Review
-              </button>
-            </div>
-          )}
+                <div className="flex justify-between items-center mb-1">
+                  <p className="font-semibold text-purple-700">{comment.user.username}</p>
+                  <span className="text-xs text-gray-400">{new Date(comment.createdAt).toLocaleString()}</span>
+                </div>
 
-          {reviews.length > 0 && (
-            <div className="mb-6">
-              <h4 className="text-md text-white">
-                Average Rating:{" "}
-                <span className="text-yellow-400 font-bold">
-                  {(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)}
-                </span>{" "}
-                / 5
-              </h4>
-              <div className="flex gap-1 mt-1">
-                {[...Array(5)].map((_, i) => (
-                  <span
-                    key={i}
-                    className={i < Math.round(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) ? "text-yellow-400" : "text-gray-500"}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-4">
-            {reviews.length > 0 ? (
-              reviews.map((review, index) => (
-                <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-green-700">{review.user}</span>
-                    <div className="flex gap-1">
+                <>
+                  {comment.rating && (
+                    <div className="flex gap-1 mb-1">
                       {[...Array(5)].map((_, i) => (
-                        <span key={i} className={i < review.rating ? "text-yellow-400" : "text-gray-300"}>
+                        <span key={i} className={i < comment.rating ? "text-yellow-400" : "text-gray-300"}>
                           ★
                         </span>
                       ))}
                     </div>
-                  </div>
-                  {review.text && <p className="text-gray-800">{review.text}</p>}
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-400">No reviews yet. Be the first to review!</p>
-            )}
-          </div>
-        </div>
+                  )}
+                  <p className="text-gray-800 text-sm leading-relaxed">{comment.text}</p>
+                </>
 
-        {/* Comments Section */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4 text-purple-700">Customer Comments</h3>
-          <div className="flex flex-col space-y-2 mb-4">
-            <textarea
-              className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Write your comment here..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <button
-              onClick={handleCommentSubmit}
-              className="self-start bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition cursor-pointer"
-            >
-              Submit Comment
-            </button>
+
+
+
+              </motion.div>
+            ))}
           </div>
-          <div className="space-y-4">
-            {comments && comments.length > 0 ? (
-              comments.map((comment, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-100 p-4 rounded-lg shadow-sm border-l-4 border-purple-500"
-                >
-                  <p className="font-semibold text-purple-700 mb-1">{comment.user.username}:</p>
-                  <p className="text-gray-800">comment: {comment.text}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No comments yet. Be the first to comment!</p>
-            )}
-          </div>
-        </div>
+        ) : (
+          <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+        )}
       </div>
     </div>
+
+
+
   );
 };
 

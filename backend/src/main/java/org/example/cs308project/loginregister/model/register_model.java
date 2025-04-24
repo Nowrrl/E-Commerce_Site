@@ -21,13 +21,11 @@ public class register_model {
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
-    public String getDeliveryAddress() {
-        return deliveryAddress;
-    }
+    @Transient // ✅ not stored in DB
+    private int loyaltyPoints;
 
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
+    @Transient // ✅ not stored in DB
+    private int totalOrders;
 
     // Getters and Setters
     public Long getId() {
@@ -62,7 +60,27 @@ public class register_model {
         this.password = password;
     }
 
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
 
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
 
+    public int getLoyaltyPoints() {
+        return loyaltyPoints;
+    }
 
+    public void setLoyaltyPoints(int loyaltyPoints) {
+        this.loyaltyPoints = loyaltyPoints;
+    }
+
+    public int getTotalOrders() {
+        return totalOrders;
+    }
+
+    public void setTotalOrders(int totalOrders) {
+        this.totalOrders = totalOrders;
+    }
 }

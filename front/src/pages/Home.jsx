@@ -5,9 +5,9 @@ import BannerCarousel from "../components/BannerCarousel";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
-    fetchWishlist,
-    addToWishlist,
-    removeFromWishlist,
+  fetchWishlist,
+  addToWishlist,
+  removeFromWishlist,
 } from "../redux/wishlistSLice";
 
 import puzzleImage from "../img/puzzle.jpeg";
@@ -29,6 +29,27 @@ const categoryIcons = {
   Monitor: "🖥️",
   Speaker: "🔊",
   Default: "🛒"
+};
+
+const getCategoryIcon = (name) => {
+  if (!name || typeof name !== "string") return categoryIcons.Default;
+
+  const cleanedName = name.trim().toLowerCase();
+
+  // Lowercased emoji map
+  const iconMap = Object.fromEntries(
+    Object.entries(categoryIcons).map(([k, v]) => [k.toLowerCase(), v])
+  );
+
+  // Exact match
+  if (iconMap[cleanedName]) return iconMap[cleanedName];
+
+  // Fuzzy match: find closest key that starts with the same letters
+  const match = Object.keys(iconMap).find((key) =>
+    cleanedName.startsWith(key.slice(0, 5)) // match first few letters
+  );
+
+  return iconMap[match] || iconMap.default || "🛒";
 };
 
 // Define newProducts array with unique IDs
@@ -78,14 +99,14 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8085/products/all")
+    axios.get("http://localhost:8085/admin/categories")
       .then((res) => {
-        const unique = [...new Set(res.data.map((p) => p.category).filter(Boolean))];
-        const sorted = unique.sort((a, b) => a.localeCompare(b));
+        const sorted = res.data.sort((a, b) => a.name.localeCompare(b.name));
         setCategories(sorted);
       })
       .catch((err) => console.error("Failed to load categories", err));
   }, []);
+
 
   return (
     <aside className="w-80 bg-white p-6 shadow-lg rounded-lg">
@@ -95,27 +116,25 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
       <ul className="space-y-2">
         <li
           onClick={() => setSelectedCategory("")}
-          className={`cursor-pointer px-4 py-2 rounded-lg transition-all ${
-            selectedCategory === ""
-              ? "bg-blue-100 text-blue-600 font-semibold"
-              : "hover:bg-gray-100"
-          }`}
+          className={`cursor-pointer px-4 py-2 rounded-lg transition-all ${selectedCategory === ""
+            ? "bg-blue-100 text-blue-600 font-semibold"
+            : "hover:bg-gray-100"
+            }`}
         >
           🛍️ All Categories
         </li>
 
-        {categories.map((cat, index) => (
+        {categories.map((cat) => (
           <li
-            key={index}
-            onClick={() => setSelectedCategory(cat)}
-            className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg transition-all ${
-              selectedCategory === cat
-                ? "bg-blue-100 text-blue-600 font-semibold"
-                : "hover:bg-gray-100"
-            }`}
+            key={cat.id || cat.name}
+            onClick={() => setSelectedCategory(cat.name)}
+            className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg transition-all ${selectedCategory === cat.name
+              ? "bg-blue-100 text-blue-600 font-semibold"
+              : "hover:bg-gray-100"
+              }`}
           >
-            <span>{categoryIcons[cat] || categoryIcons.Default}</span>
-            <span>{cat}</span>
+            <span>{getCategoryIcon(cat.name)}</span>
+            <span>{cat.name}</span>
           </li>
         ))}
       </ul>
@@ -136,46 +155,66 @@ const Banner = () => (
 );
 
 const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
-    <div className="border p-4 rounded-2xl shadow-lg w-72 bg-white transition-transform hover:scale-105 hover:shadow-xl relative">
-        {/* Heart */}
-        <button
-            onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
-            className="absolute  top-2 right-2 focus:outline-none ">
-      <span
-          className={
-              "text-3xl select-none " +
-              (isInWishlist
-                  ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent cursor-pointer"
-                  : "text-gray-300 cursor-pointer")
-          }>
-        {isInWishlist ? "♥" : "♡"}
-      </span>
-        </button>
+  <div className="relative p-4 bg-white rounded-2xl shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]">
+    {/* Heart Icon */}
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        toggleWishlist(product.id);
+      }}
+      className="absolute top-3 right-3 text-gray-300 hover:scale-110 transition-transform"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill={isInWishlist ? "url(#grad)" : "none"}
+        viewBox="0 0 24 24"
+        strokeWidth="1.5"
+        stroke="currentColor"
+        className="w-7 h-7"
+      >
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ec4899" />
+            <stop offset="100%" stopColor="#8b5cf6" />
+          </linearGradient>
+        </defs>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M21.8 6.8a5.5 5.5 0 00-7.7 0L12 8.9l-2.1-2.1a5.5 5.5 0 00-7.7 7.7l9.8 9.8 9.8-9.8a5.5 5.5 0 000-7.7z"
+        />
+      </svg>
+    </button>
 
-        {/* Image */}
-        <div className="relative w-full h-44">
-            <img
-                src={product.imageUrl || "default_product_image.png"}
-                alt={product.name}
-                className="w-full h-full object-cover rounded-xl"
-            />
-        </div>
+    {/* Product Image */}
+    <Link to={`/product/${product.id}`}>
+      <div className="w-full h-44 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
+        <img
+          src={product.imageUrl || "/products_images/default_product_image.png"}
+          alt={product.name}
+          className="object-contain w-full h-full p-2"
+        />
+      </div>
+    </Link>
 
-        {/* Text */}
-        <h3 className="font-semibold mt-3 text-gray-800 text-lg">{product.name}</h3>
-        <p className="text-xl font-bold text-red-500 mt-1">${product.price}</p>
-
-        {/* View / Buy */}
-        <Link to={`/product/${product.id}`}>
-            <button className="mt-4 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-lg text-lg font-semibold hover:opacity-90">
-                Bir kliklə al
-            </button>
-        </Link>
+    {/* Product Info */}
+    <div className="mt-3">
+      <h3 className="font-medium text-gray-800 text-md truncate">{product.name}</h3>
+      <p className="text-red-500 font-bold text-lg">${product.price}</p>
     </div>
+
+    {/* CTA Button */}
+    <Link to={`/product/${product.id}`}>
+      <button className="mt-3 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2 rounded-xl hover:brightness-110 transition">
+        Bir kliklə al
+      </button>
+    </Link>
+  </div>
 );
 
 
-const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist  }) => {
+
+const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) => {
   const [activeTab, setActiveTab] = useState("All Products");
   const [backendProducts, setBackendProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -197,11 +236,12 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist  }) 
   }, []);
 
   const filtered = backendProducts
+    .filter(p => p.approvedBySales) // only show approved products
     .filter((product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .filter((product) =>
-      selectedCategory ? product.category === selectedCategory : true
+      selectedCategory ? product.category.name === selectedCategory : true
     );
 
   const sorted = filtered.sort((a, b) => {
@@ -217,11 +257,10 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist  }) 
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`text-lg font-bold pb-2 transition ${
-              activeTab === tab
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-500"
-            }`}
+            className={`text-lg font-bold pb-2 transition ${activeTab === tab
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-500"
+              }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab}
@@ -253,10 +292,10 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist  }) 
             {sorted.length > 0 ? (
               sorted.map((product) => (
                 <ProductCard
-                    key={product.id}
-                    product={product}
-                    isInWishlist={wishlistIds.has(product.id)}
-                    toggleWishlist={toggleWishlist}
+                  key={product.id}
+                  product={product}
+                  isInWishlist={wishlistIds.has(product.id)}
+                  toggleWishlist={toggleWishlist}
                 />
               ))
             ) : (
@@ -282,26 +321,26 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist  }) 
 };
 
 const Home = () => {
-    const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-    // ---- wishlist wiring ----
-    const dispatch     = useDispatch();
-    const currentUser  = useSelector((s) => s.user.currentUser);
-    const wishlistItems= useSelector((s) => s.wishlist.items || []);
-    const wishlistIds  = new Set(wishlistItems.map((w) => w.product.id));
+  // ---- wishlist wiring ----
+  const dispatch = useDispatch();
+  const currentUser = useSelector((s) => s.user.currentUser);
+  const wishlistItems = useSelector((s) => s.wishlist.items || []);
+  const wishlistIds = new Set(wishlistItems.map((w) => w.product.id));
 
-    useEffect(() => {
-        if (currentUser?.id) dispatch(fetchWishlist(currentUser.id));
-    }, [currentUser?.id, dispatch]);
+  useEffect(() => {
+    if (currentUser?.id) dispatch(fetchWishlist(currentUser.id));
+  }, [currentUser?.id, dispatch]);
 
-    const toggleWishlist = (productId) => {
-        if (!currentUser?.id) return;             // user not logged in
-        if (wishlistIds.has(productId)) {
-            dispatch(removeFromWishlist({ userId: currentUser.id, productId }));
-        } else {
-            dispatch(addToWishlist({    userId: currentUser.id, productId }));
-        }
-    };
+  const toggleWishlist = (productId) => {
+    if (!currentUser?.id) return;             // user not logged in
+    if (wishlistIds.has(productId)) {
+      dispatch(removeFromWishlist({ userId: currentUser.id, productId }));
+    } else {
+      dispatch(addToWishlist({ userId: currentUser.id, productId }));
+    }
+  };
 
   return (
     <div className="border-t-1 border-white p-10 bg-gradient-to-b from-black to-purple-900">
@@ -316,16 +355,16 @@ const Home = () => {
       </div>
 
       <div className="flex">
-       <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
-      <div className="flex-1 p-8">
+        <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+        <div className="flex-1 p-8">
           {/* If you have a BannerCarousel, use it. Otherwise the sample Banner */}
           <BannerCarousel />
         </div>
       </div>
       <ProductTabsSection
-          selectedCategory={selectedCategory}
-          wishlistIds={wishlistIds}
-          toggleWishlist={toggleWishlist}
+        selectedCategory={selectedCategory}
+        wishlistIds={wishlistIds}
+        toggleWishlist={toggleWishlist}
       />
     </div>
   );

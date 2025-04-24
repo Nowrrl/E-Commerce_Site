@@ -1,7 +1,16 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+// src/App.jsx
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 import Home from "./pages/Home";
 import Login from "./pages/login";
@@ -9,55 +18,97 @@ import Register from "./pages/Register";
 import ProductDetails from "./pages/Productdetails";
 import ShoppingCart from "./pages/ShoppingCart";
 import ClientProfile from "./pages/ClientProfile";
-import ClientOrders from "./pages/ClientOrders.jsx";
-import ClientWishlist from "./pages/ClientWishlist.jsx";
+import ClientOrders from "./pages/ClientOrders";
+import ClientWishlist from "./pages/ClientWishlist";
+import Checkout from "./pages/Checkout";
+import ViewedBefore from "./pages/ViewedBefore";
+import CategoryProducts from "./pages/CategoryProducts";
 
-import { clearCart } from "./redux/cartSlice";
+// Admin
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLayout from "./pages/admin/AdminLayout";
+import ProductManager from "./pages/admin/ProductManager";
+import CategoryManager from "./pages/admin/CategoryManager";
+import OrderDashboard from "./pages/admin/OrderDashboard";
+import CommentApproval from "./pages/admin/CommentApproval";
+import PricingManager from "./pages/admin/PricingManager";
+import Reports from "./pages/admin/Reports";
+
+import { clearCart, setCartFromBackend } from "./redux/cartSlice";
 import { logout } from "./redux/user/userSlice";
-import { setCartFromBackend } from "./redux/cartSlice";
-import Checkout from "./pages/Checkout.jsx";
 
-function App() {
-  const currentUser = useSelector((state) => state.user.currentUser);
+// Axios config
+axios.defaults.baseURL = "http://localhost:8085";
+axios.defaults.withCredentials = true;
+
+const NotFound = () => (
+  <div className="p-10 text-white text-center text-2xl">404 - Page Not Found</div>
+);
+
+function AppWrapper() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const isAdminPath = location.pathname.startsWith("/admin");
 
-  // Load cart when user changes
+  // Admin role check from redux or localStorage
+  const adminJSON = localStorage.getItem("admin");
+  const savedAdmin = adminJSON ? JSON.parse(adminJSON) : null;
+  const isAdmin =
+    ["PRODUCT_MANAGER", "SALES_MANAGER"].includes(currentUser?.role) ||
+    ["PRODUCT_MANAGER", "SALES_MANAGER"].includes(savedAdmin?.role);
+
+  // Load cart
   useEffect(() => {
     const fetchCart = async () => {
       if (!currentUser?.id) return;
-
       try {
-        const response = await axios.get(`http://localhost:8085/cart/view`, {
-          params: { userId: currentUser.id }
+        const { data } = await axios.get("/cart/view", {
+          params: { userId: currentUser.id },
         });
-
         const cartItems = await Promise.all(
-            response.data.map(async (item) => {
-              const productRes = await axios.get(`http://localhost:8085/products/${item.productId}`);
-              return {
-                product: productRes.data,
-                quantity: item.quantity
-              };
-            })
+          data.map(async (item) => {
+            const prod = await axios.get(`/products/${item.productId}`);
+            return { product: prod.data, quantity: item.quantity };
+          })
         );
-
         dispatch(setCartFromBackend(cartItems));
       } catch (err) {
-        console.error("Error loading cart from backend:", err);
+        console.error("Error loading cart:", err);
       }
     };
-
     fetchCart();
-  }, [currentUser, dispatch]);
+  }, [currentUser?.id, dispatch]);
+
+  // Restore admin Authorization header from localStorage
+  useEffect(() => {
+    const savedAuth = localStorage.getItem("adminAuth");
+    if (savedAuth) {
+      axios.defaults.headers.common["Authorization"] = savedAuth;
+      console.log("Current Authorization:", axios.defaults.headers.common["Authorization"]);
+    }
+  }, []);
 
   const handleLogout = () => {
-    dispatch(clearCart());       // clear cart from Redux + localStorage
-    dispatch(logout());          // reset user state
-    window.location.href = "/login"; // safely redirect
+    dispatch(clearCart());
+    dispatch(logout());
+
+    delete axios.defaults.headers.common["Authorization"];
+    localStorage.removeItem("adminAuth");
+    localStorage.removeItem("admin");
+
+    if (isAdminPath) {
+      navigate("/admin/login");
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
-      <Router>
+    <>
+      {/* Show nav only for users, not admins */}
+      {!isAdminPath && (
         <nav className="bg-[#0C0C0E] text-white py-4 shadow-lg">
           <div className="container mx-auto flex justify-between items-center px-6">
             <h1 className="font-bold text-3xl">
@@ -67,41 +118,65 @@ function App() {
               <Link to="/cart">Cart</Link>
               <Link to="/">Home</Link>
               <Link to="/profile">My Profile</Link>
-              <span>
-              Logged in as:{" "}
-                {currentUser?.username ? currentUser.username : "Guest"}
-            </span>
-              {currentUser?.username && currentUser.username !== "Guest" ? (
-                  <button onClick={handleLogout} className="hover:underline">
-                    Logout
-                  </button>
+              <span>Logged in as: {currentUser?.username ?? "Guest"}</span>
+              {currentUser?.username && currentUser?.username !== "Guest" ? (
+                <button onClick={handleLogout} className="hover:underline">
+                  Logout
+                </button>
               ) : (
-                  <>
-                    <Link to="/login" className="hover:underline">
-                      Login
-                    </Link>
-                    <Link to="/register" className="hover:underline">
-                      Register
-                    </Link>
-                  </>
+                <>
+                  <Link to="/login" className="hover:underline">Login</Link>
+                  <Link to="/register" className="hover:underline">Register</Link>
+                </>
               )}
             </div>
           </div>
         </nav>
+      )}
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<ShoppingCart />} />
-          <Route path="/profile" element={<ClientProfile />} />
-          <Route path="/clientorders" element={<ClientOrders />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/wishlist" element={<ClientWishlist/>} />
-        </Routes>
-      </Router>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/profile" element={<ClientProfile />} />
+        <Route path="/clientorders" element={<ClientOrders />} />
+        <Route path="/wishlist" element={<ClientWishlist />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/viewed" element={<ViewedBefore />} />
+        <Route path="/category/:categoryName" element={<CategoryProducts />} />
+
+
+        {/* Admin login page */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* Admin protected routes */}
+        {isAdmin ? (
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="products" element={<ProductManager />} />
+            <Route path="categories" element={<CategoryManager />} />
+            <Route path="orders" element={<OrderDashboard />} />
+            <Route path="comments" element={<CommentApproval />} />
+            <Route path="pricing" element={<PricingManager />} />
+            <Route path="reports" element={<Reports />} />
+          </Route>
+        ) : (
+          <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
+        )}
+
+        {/* Fallback */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <AppWrapper />
+    </Router>
+  );
+}

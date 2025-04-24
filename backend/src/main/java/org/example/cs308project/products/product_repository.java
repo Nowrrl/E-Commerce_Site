@@ -17,6 +17,8 @@ public interface product_repository extends JpaRepository<product_model, Long> {
     // Search by Name (Case-Insensitive)
     List<product_model> findByNameContainingIgnoreCase(String name);
 
+    List<product_model> findByCategoryId(Long categoryId);
+
     // Search by Model
     List<product_model> findByModelContainingIgnoreCase(String model);
 
@@ -54,6 +56,11 @@ public interface product_repository extends JpaRepository<product_model, Long> {
     // Generic sorting method
     List<product_model> findAll(Sort sort);
     Page<product_model> findAll(Pageable pageable);
+
+
+    @Query("SELECT DISTINCT p.category FROM product_model p WHERE p.category IS NOT NULL")
+    List<String> findDistinctCategories();
+
 
 }
 

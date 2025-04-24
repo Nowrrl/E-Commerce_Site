@@ -71,8 +71,8 @@ public class user_controller {
 
     // Worker Login Endpoint
     @PostMapping("/worker/login")
-    public Map<String, String> workerLogin(@RequestBody login_model loginWorker) {
-        Map<String, String> response = new HashMap<>();
+    public Map<String, Object> workerLogin(@RequestBody login_model loginWorker) {
+        Map<String, Object> response = new HashMap<>();
 
         workers_model worker = workersService.findByUsername(loginWorker.getUsername());
 
@@ -81,7 +81,13 @@ public class user_controller {
         } else if (!worker.getPassword().equals(loginWorker.getPassword())) {
             response.put("message", "Invalid password");
         } else {
+            Map<String, Object> workerDetails = new HashMap<>();
+            workerDetails.put("id", worker.getId());
+            workerDetails.put("username", worker.getUsername());
+            workerDetails.put("role", worker.getRole());
+
             response.put("message", "Worker login successful");
+            response.put("worker", workerDetails);
         }
         return response;
     }

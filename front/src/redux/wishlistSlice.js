@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
 export const fetchWishlist = createAsyncThunk(
     "wishlist/fetch",
     async (userId) => {
@@ -21,7 +22,7 @@ export const addToWishlist = createAsyncThunk(
         );
         return dispatch(fetchWishlist(userId)).unwrap();
     }
-);
+  );
 
 export const removeFromWishlist = createAsyncThunk(
     "wishlist/remove",

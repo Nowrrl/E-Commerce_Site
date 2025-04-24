@@ -87,9 +87,64 @@ public class comment_service {
     }
 
 
-
     // Get all comments by a user
     public List<comment_model> getCommentsByUser(Long userId) {
         return commentRepository.findByUserId(userId);
     }
+
+    /**
+     * NEW
+     **/
+    public List<comment_model> getPendingComments() {
+        return commentRepository.findByApprovedFalse();
+    }
+
+    /**
+     * NEW
+     **/
+    public comment_model approveComment(Long commentId) {
+        Optional<comment_model> opt = commentRepository.findById(commentId);
+        if (opt.isPresent()) {
+            comment_model cm = opt.get();
+            cm.setApproved(true);
+            return commentRepository.save(cm);
+        }
+        throw new RuntimeException("Comment not found");
+    }
+
+    /**
+     * NEW
+     **/
+    public void rejectComment(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    public comment_model editComment(Long commentId, String newText) {
+        Optional<comment_model> opt = commentRepository.findById(commentId);
+        if (opt.isPresent()) {
+            comment_model cm = opt.get();
+            cm.setText(newText);
+            return commentRepository.save(cm);
+        }
+        throw new RuntimeException("Comment not found");
+    }
+
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    public List<comment_model> getApprovedCommentsByProduct(Long productId) {
+        return commentRepository.findByProductId(productId)
+                .stream()
+                .filter(comment -> comment.isApproved())
+                .toList();
+    }
+
+    public List<comment_model> getAllApprovedComments() {
+        return commentRepository.findByApprovedTrue();
+    }
+
+
+
 }
+

@@ -1,10 +1,11 @@
+// src/main/java/org/example/cs308project/comment_rating/comment_controller.java
 package org.example.cs308project.comment_rating;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/comments")
@@ -13,23 +14,25 @@ public class comment_controller {
     @Autowired
     private comment_service commentService;
 
-    // Add a new comment
-    @PostMapping("/add")
-    public comment_model addComment(
-            @RequestParam Long userId,
-            @RequestParam Long productId,
-            @RequestParam String text,
-            @RequestParam int rating) {
-        return commentService.addComment(userId, productId, text, rating);
+    @PostMapping(
+            path = "/add",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public comment_model addComment(@RequestBody CommentRequest req) {
+        return commentService.addComment(
+                req.getUserId(),
+                req.getProductId(),
+                req.getText(),
+                req.getRating()
+        );
     }
 
-    // Get all comments for a specific product
     @GetMapping("/product/{productId}")
-    public List<comment_model> getCommentsByProduct(@PathVariable Long productId) {
-        return commentService.getCommentsByProduct(productId);
+    public List<comment_model> getApprovedCommentsByProduct(@PathVariable Long productId) {
+        return commentService.getApprovedCommentsByProduct(productId);
     }
 
-    // Get all comments made by a specific user
     @GetMapping("/user/{userId}")
     public List<comment_model> getCommentsByUser(@PathVariable Long userId) {
         return commentService.getCommentsByUser(userId);
@@ -41,12 +44,12 @@ public class comment_controller {
     }
 
     @PostMapping("/add-rating")
-    public String addRating(@RequestBody Map<String, Object> request) {
-        Long userId = Long.valueOf(request.get("userId").toString());
-        Long productId = Long.valueOf(request.get("productId").toString());
-        int rating = Integer.parseInt(request.get("rating").toString());
-
-        return commentService.addRating(userId, productId, rating);
+    public String addRating(@RequestBody CommentRequest req) {
+        return commentService.addRating(
+                req.getUserId(),
+                req.getProductId(),
+                req.getRating()
+        );
     }
 
     @GetMapping("/ratings/user/{userId}")
@@ -59,5 +62,34 @@ public class comment_controller {
         return commentService.getRatingsByProductId(productId);
     }
 
+    @PutMapping("/{commentId}")
+    public comment_model editCommentSimple(@PathVariable Long commentId, @RequestBody CommentEditRequest body) {
+        return commentService.editComment(commentId, body.getText());
+    }
+
+    @DeleteMapping("/{commentId}")
+    public void deleteCommentSimple(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+    }
+
+    @GetMapping("/pending")
+    public List<comment_model> getPendingComments() {
+        return commentService.getPendingComments();
+    }
+
+    @PutMapping("/approve/{commentId}")
+    public comment_model approveComment(@PathVariable Long commentId) {
+        return commentService.approveComment(commentId);
+    }
+
+    @DeleteMapping("/reject/{commentId}")
+    public void rejectComment(@PathVariable Long commentId) {
+        commentService.rejectComment(commentId);
+    }
+
+    @GetMapping("/approved")
+    public List<comment_model> getAllApprovedComments() {
+        return commentService.getAllApprovedComments();
+    }
 
 }

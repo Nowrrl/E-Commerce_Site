@@ -3,6 +3,7 @@ package org.example.cs308project.comment_rating;
 import jakarta.persistence.*;
 import org.example.cs308project.loginregister.model.register_model;
 import org.example.cs308project.products.product_model;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,40 +16,75 @@ public class comment_model {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private register_model user;  // Fetch user from loginregister
+    private register_model user;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    private product_model product; // Fetch product from products
+    private product_model product;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String text;
 
     @Column(nullable = false)
-    private String text; // Comment text
-
-    @Column(nullable = false)
-    private int rating; // Rating from 1 to 5
+    private int rating;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    // NEW: approved flag, defaults to false
+    @Column(nullable = false)
+    private boolean approved = false;
 
     public comment_model() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters & setters
 
-    public register_model getUser() { return user; }
-    public void setUser(register_model user) { this.user = user; }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public product_model getProduct() { return product; }
-    public void setProduct(product_model product) { this.product = product; }
+    public register_model getUser() {
+        return user;
+    }
+    public void setUser(register_model user) {
+        this.user = user;
+    }
 
-    public String getText() { return text; }
-    public void setText(String text) { this.text = text; }
+    public product_model getProduct() {
+        return product;
+    }
+    public void setProduct(product_model product) {
+        this.product = product;
+    }
 
-    public int getRating() { return rating; }
-    public void setRating(int rating) { this.rating = rating; }
+    public String getText() {
+        return text;
+    }
+    public void setText(String text) {
+        this.text = text;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public int getRating() {
+        return rating;
+    }
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    // NEW getter & setter for approved
+    public boolean isApproved() {
+        return approved;
+    }
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
 }

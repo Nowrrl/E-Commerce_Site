@@ -2,155 +2,149 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const ClientOrders = () => {
-    const currentUser = useSelector((state) => state.user.currentUser);
-    const [orders, setOrders] = useState([]);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const [orders, setOrders] = useState([]);
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            if (!currentUser?.id) return;
-            try {
-                const response = await axios.get(
-                    `http://localhost:8085/orders/user/${currentUser.id}`
-                );
-                setOrders(response.data);
-            } catch (error) {
-                console.error("Error fetching orders:", error);
-            }
-        };
-        fetchOrders();
-    }, [currentUser]);
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!currentUser?.id) return;
+      try {
+        const response = await axios.get(`http://localhost:8085/orders/user/${currentUser.id}`);
+        setOrders(response.data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+    fetchOrders();
+  }, [currentUser]);
 
-    // We'll treat orders with "processing" or "shipped" as active.
-    const activeOrders = orders.filter((order) => {
-        const status = order.status.toLowerCase();
-        return status === "processing" || status === "shipped";
-    });
-    const previousOrders = orders.filter((order) => {
-        const status = order.status.toLowerCase();
-        return status !== "processing" && status !== "shipped";
-    });
+  const handleSubmitReview = async (orderId, productId, text, rating) => {
+    try {
+      await axios.post("http://localhost:8085/comments/add", {
+        userId: currentUser.id,
+        productId,
+        text,
+        rating
+      });
 
-    return (
-        <div className="bg-gradient-to-b from-black to-purple-900 min-h-screen p-6 flex flex-col items-center">
-            {/* Outer white container for the orders page */}
-            <div className="bg-white text-black w-full max-w-4xl p-6 rounded-md shadow-md border border-gray-300">
-                {/* Header */}
-                <div className="border-b border-gray-300 pb-2 mb-6">
-                    <h1 className="text-3xl font-bold">My Orders</h1>
-                </div>
+      alert("✅ Your review has been submitted and will be visible once approved by our moderation team.");
+    } catch (err) {
+      console.error("Failed to submit review:", err);
+      alert("❌ Failed to submit review. Please try again later.");
+    }
+  };
 
-                {/* Back to Profile Button */}
-                <Link
-                    to="/profile"
-                    className="inline-block bg-gradient-to-r from-purple-500 to-purple-700 text-white py-2 px-4 rounded-lg hover:opacity-90 transition cursor-pointer hover:underline mb-6"
+  return (
+    <div className="bg-gradient-to-b from-black to-purple-900 min-h-screen p-6 flex flex-col items-center">
+      <div className="bg-white text-black w-full max-w-5xl p-8 rounded-2xl shadow-xl">
+        <h1 className="text-3xl font-bold mb-6 border-b pb-4">📦 My Orders</h1>
+
+        <Link
+          to="/profile"
+          className="inline-block mb-6 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
+        >
+          ← Back to Profile
+        </Link>
+
+        {orders.length === 0 ? (
+          <p className="text-gray-500">No orders found.</p>
+        ) : (
+          <div className="space-y-10">
+            {orders.map((order) => {
+              const isDelivered = order.status.toLowerCase() === "delivered";
+
+              return (
+                <motion.div
+                  key={order.orderId}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="border border-gray-300 rounded-xl p-6 bg-gray-50 shadow-sm"
                 >
-                    Back to Profile
-                </Link>
-
-                {/* Active Orders Section */}
-                <div className="border-b border-gray-300 pb-2 mb-6">
-                    <h2 className="text-xl font-semibold mb-3">Current Orders</h2>
-                    {activeOrders.length > 0 ? (
-                        <div className="space-y-6">
-                            {activeOrders.map((order) => (
-                                <div
-                                    key={order.orderId}
-                                    className="bg-white border border-gray-300 rounded-md shadow-sm p-4"
-                                >
-                                    {/* Order Header */}
-                                    <div className="flex flex-col md:flex-row md:justify-between mb-2">
-                                        <p className="font-bold text-gray-900">
-                                            Order ID: {order.orderId}
-                                        </p>
-                                        <p className="text-sm text-gray-700">
-                                            Ordered on:{" "}
-                                            <span className="font-medium">
-                        {new Date(order.createdAt).toLocaleString()}
-                      </span>
-                                        </p>
-                                    </div>
-                                    {/* Order Details */}
-                                    <div className="text-sm space-y-2">
-                                        <p>
-                                            <strong>Product:</strong> {order.product.name}
-                                        </p>
-                                        <p>
-                                            <strong>Quantity:</strong> {order.quantity}
-                                        </p>
-                                        <p>
-                                            <strong>Total Price:</strong>{" "}
-                                            <span className="text-red-600">
-                        ${order.totalPrice.toFixed(2)}
-                      </span>
-                                        </p>
-                                        <p>
-                                            <strong>Status:</strong>{" "}
-                                            <span className="text-green-600">{order.status}</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 ml-2">No current orders found.</p>
-                    )}
-                </div>
-
-                {/* Previous Orders Section */}
-                <div>
-                    <div className="border-b border-gray-300 pb-2 mb-4">
-                        <h2 className="text-xl font-semibold mb-3">Previous Orders</h2>
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <img
+                      src={order.product.imageUrl || "/products_images/default_product_image.png"}
+                      alt={order.product.name}
+                      className="w-32 h-32 rounded-xl object-cover border"
+                    />
+                    <div className="flex-1 space-y-2">
+                      <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-semibold">{order.product.name}</h2>
+                        <span className={`text-sm font-medium px-3 py-1 rounded-full 
+                          ${isDelivered ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                          {order.status}
+                        </span>
+                      </div>
+                      <p><strong>Order ID:</strong> {order.orderId}</p>
+                      <p><strong>Quantity:</strong> {order.quantity}</p>
+                      <p><strong>Total:</strong> <span className="text-red-600 font-bold">${order.totalPrice.toFixed(2)}</span></p>
+                      <p><strong>Ordered on:</strong> {new Date(order.createdAt).toLocaleString()}</p>
                     </div>
-                    {previousOrders.length > 0 ? (
-                        <div className="space-y-6">
-                            {previousOrders.map((order) => (
-                                <div
-                                    key={order.orderId}
-                                    className="bg-white border border-gray-300 rounded-md shadow-sm p-4"
-                                >
-                                    {/* Order Header */}
-                                    <div className="flex flex-col md:flex-row md:justify-between mb-2">
-                                        <p className="font-bold text-gray-900">
-                                            Order ID: {order.orderId}
-                                        </p>
-                                        <p className="text-sm text-gray-700">
-                                            Ordered on:{" "}
-                                            <span className="font-medium">
-                        {new Date(order.createdAt).toLocaleString()}
-                      </span>
-                                        </p>
-                                    </div>
-                                    {/* Order Details */}
-                                    <div className="text-sm space-y-2">
-                                        <p>
-                                            <strong>Product:</strong> {order.product.name}
-                                        </p>
-                                        <p>
-                                            <strong>Quantity:</strong> {order.quantity}
-                                        </p>
-                                        <p>
-                                            <strong>Total Price:</strong>{" "}
-                                            <span className="text-red-600">
-                        ${order.totalPrice.toFixed(2)}
-                      </span>
-                                        </p>
-                                        <p>
-                                            <strong>Status:</strong>{" "}
-                                            <span className="text-purple-600">{order.status}</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 ml-2">No previous orders found.</p>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
+                  </div>
+
+                  {isDelivered && (
+                    <ReviewForm
+                      orderId={order.orderId}
+                      productId={order.product.id}
+                      onSubmit={handleSubmitReview}
+                    />
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ReviewForm = ({ orderId, productId, onSubmit }) => {
+  const [text, setText] = useState("");
+  const [rating, setRating] = useState(5);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-6 border-t pt-4"
+    >
+      <h4 className="text-lg font-semibold text-purple-700 mb-2">📝 Leave a Review</h4>
+      <label className="block text-sm mb-1">Rating:</label>
+      <div className="flex gap-1 mb-3">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            className={`cursor-pointer text-2xl ${
+              star <= rating ? "text-yellow-400" : "text-gray-300"
+            }`}
+            onClick={() => setRating(star)}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+      <textarea
+        className="w-full border border-gray-300 rounded px-3 py-2 mb-3"
+        rows="3"
+        placeholder="Write your review here..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button
+        onClick={() => onSubmit(orderId, productId, text, rating)}
+        className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
+      >
+        Submit Review
+      </button>
+      <p className="text-xs text-gray-500 mt-2 italic">
+        Your review will be visible after it is approved by our moderation team.
+      </p>
+    </motion.div>
+  );
 };
 
 export default ClientOrders;

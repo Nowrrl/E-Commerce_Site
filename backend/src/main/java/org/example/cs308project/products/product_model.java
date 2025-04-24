@@ -1,10 +1,17 @@
 package org.example.cs308project.products;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.cs308project.categories.category_model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "products_table")
+@Getter
+@Setter
 public class product_model {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,8 +22,12 @@ public class product_model {
     @Column(nullable = false)
     private String model;
 
-    @Column(nullable = false)
-    private String category;
+    @Column(name = "approved_by_sales")
+    private boolean approvedBySales = false;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
+    private category_model category;
 
     @Column(nullable = false, unique = true)
     private String serialNumber;
@@ -39,44 +50,13 @@ public class product_model {
     @Column(nullable = false)
     private String distributorInfo;
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
-
-    public String getSerialNumber() { return serialNumber; }
-    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
-
-    public String getWarrantyStatus() { return warrantyStatus; }
-    public void setWarrantyStatus(String warrantyStatus) { this.warrantyStatus = warrantyStatus; }
-
-    public String getDistributorInfo() { return distributorInfo; }
-    public void setDistributorInfo(String distributorInfo) { this.distributorInfo = distributorInfo; }
-
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public boolean isApprovedBySales() {
+        return approvedBySales;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setApprovedBySales(boolean approvedBySales) {
+        this.approvedBySales = approvedBySales;
     }
 
 }
-

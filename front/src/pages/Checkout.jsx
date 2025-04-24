@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "../redux/cartSlice";
 import { clearBackendCart } from "../api/api";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ import axios
 
 function Checkout() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -37,20 +38,16 @@ function Checkout() {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:8085/checkout?userId=${currentUser.id}&deliveryAddress=${encodeURIComponent(
-          formData.address
-        )}`,
+      await axios.post(
+        "/checkout", // ✅ this works with baseURL already set in App.jsx
+        null,
         {
-          method: "POST"
+          params: {
+            userId: currentUser.id,
+            deliveryAddress: formData.address
+          }
         }
       );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Backend error:", errorText);
-        throw new Error("Checkout failed");
-      }
 
       if (currentUser?.id) await clearBackendCart(currentUser.id);
       dispatch(clearCart());
