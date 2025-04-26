@@ -52,14 +52,12 @@ export default function AdminLogin() {
 
         dispatch(setAdminUser(adminUser));
 
-        // Redirect based on role
-        if (role === "PRODUCT_MANAGER") {
-          navigate("/admin/products");
-        } else if (role === "SALES_MANAGER") {
-          navigate("/admin/pricing");
-        } else {
+        if (role === "PRODUCT_MANAGER" || role === "SALES_MANAGER") {
           navigate("/admin");
+        } else {
+          navigate("/admin/login");
         }
+
       } else {
         setError(res.data.message || "Login failed");
       }
@@ -70,35 +68,49 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-black relative overflow-hidden">
+      {/* Fancy blurred background shapes */}
+      <div className="absolute w-72 h-72 bg-purple-600 opacity-30 rounded-full blur-3xl top-10 left-10"></div>
+      <div className="absolute w-72 h-72 bg-indigo-600 opacity-30 rounded-full blur-3xl bottom-10 right-10"></div>
+
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-80 space-y-4"
+        className="backdrop-blur-md bg-white/10 p-8 rounded-3xl shadow-2xl border border-gray-300/20 w-96 space-y-6 text-white relative z-10"
       >
-        <h2 className="text-xl font-semibold text-center">Admin Login</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <h2 className="text-3xl font-extrabold text-center tracking-tight">
+          Admin Portal Login
+        </h2>
+
+        {error && (
+          <p className="text-red-400 text-sm text-center">{error}</p>
+        )}
+
         <div>
-          <label className="block mb-1">Username</label>
+          <label className="block mb-2 text-sm font-semibold">Username</label>
           <input
             name="username"
             value={creds.username}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="w-full bg-white/20 backdrop-blur-sm border border-white/30 p-3 rounded-lg placeholder-white focus:ring-2 focus:ring-purple-400 focus:outline-none text-black"
+            placeholder="Enter username"
           />
         </div>
+
         <div>
-          <label className="block mb-1">Password</label>
+          <label className="block mb-2 text-sm font-semibold">Password</label>
           <input
             type="password"
             name="password"
             value={creds.password}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="w-full bg-white/20 backdrop-blur-sm border border-white/30 p-3 rounded-lg placeholder-white focus:ring-2 focus:ring-purple-400 focus:outline-none text-black"
+            placeholder="Enter password"
           />
         </div>
+
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="w-full bg-purple-600 hover:bg-purple-700 transition font-semibold py-3 rounded-lg text-white text-lg tracking-wide"
         >
           Log In
         </button>

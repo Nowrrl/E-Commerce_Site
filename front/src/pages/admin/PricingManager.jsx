@@ -68,70 +68,82 @@ export default function PricingManager() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-4">Pricing & Approval</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] p-8 text-white">
+      <h1 className="text-3xl font-bold mb-8">Pricing & Product Approval</h1>
 
+      {/* Top message */}
       {message && (
-        <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded">
+        <div className="mb-8 p-4 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-lg text-center font-medium">
           {message}
         </div>
       )}
 
-      <div className="mb-6 flex space-x-4 items-end">
-        <select
-          value={priceUpdate.productId}
-          onChange={e => setPriceUpdate({ ...priceUpdate, productId: e.target.value })}
-          className="border p-2 rounded"
-        >
-          <option value="">Select product</option>
-          {products.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
-        </select>
-        <input
-          type="number"
-          placeholder="Set Price"
-          className="border p-2 rounded w-32"
-          value={priceUpdate.price}
-          onChange={e => setPriceUpdate({ ...priceUpdate, price: e.target.value })}
-        />
-        <button
-          onClick={updatePrice}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          Approve & Set Price
-        </button>
+      {/* Form area */}
+      <div className="bg-white text-gray-800 rounded-2xl shadow-2xl p-8 mb-10 max-w-4xl mx-auto">
+        <h2 className="text-xl font-semibold mb-6">Set Product Price</h2>
+
+        <div className="flex flex-col md:flex-row gap-4 items-end mb-6">
+          <select
+            value={priceUpdate.productId}
+            onChange={e => setPriceUpdate({ ...priceUpdate, productId: e.target.value })}
+            className="border border-gray-300 p-2 rounded w-full md:w-1/2"
+          >
+            <option value="">Select product</option>
+            {products.map(p => (
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
+          </select>
+
+          <input
+            type="number"
+            placeholder="Set Price"
+            className="border border-gray-300 p-2 rounded w-full md:w-1/4"
+            value={priceUpdate.price}
+            onChange={e => setPriceUpdate({ ...priceUpdate, price: e.target.value })}
+          />
+
+          <button
+            onClick={updatePrice}
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded"
+          >
+            Approve & Set Price
+          </button>
+        </div>
+
+        {/* Show discounted price suggestion */}
+        {priceUpdate.productId && priceUpdate.price && (
+          <div className="text-gray-700 font-medium">
+            Suggested final price after {priceUpdate.price}% discount:{" "}
+            <span className="font-bold">
+              ${calculateDiscountedPrice(priceUpdate.productId, priceUpdate.price).toFixed(2)}
+            </span>
+          </div>
+        )}
       </div>
 
-      {priceUpdate.productId && (
-        <div className="text-gray-700">
-          Suggested price after {priceUpdate.price}% discount:{" "}
-          <span className="font-semibold">
-            ${calculateDiscountedPrice(priceUpdate.productId, priceUpdate.price).toFixed(2)}
-          </span>
-        </div>
-      )}
-
-
-      <table className="w-full table-auto border-collapse bg-white rounded shadow">
-        <thead className="bg-gray-200">
-          <tr>
-            {['ID', 'Name', 'Price', 'Approved?'].map(h => (
-              <th key={h} className="border p-2">{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(p => (
-            <tr key={p.id} className="hover:bg-gray-50">
-              <td className="border p-2">{p.id}</td>
-              <td className="border p-2">{p.name}</td>
-              <td className="border p-2">${p.price.toFixed(2)}</td>
-              <td className="border p-2">{p.approvedBySales ? "✅ Yes" : "❌ No"}</td>
+      {/* Products Table */}
+      <div className="overflow-x-auto bg-white text-gray-800 rounded-2xl shadow-2xl p-8">
+        <h2 className="text-xl font-semibold mb-6">All Products</h2>
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-gray-100">
+              {['ID', 'Name', 'Price', 'Approved?'].map(h => (
+                <th key={h} className="text-left text-gray-600 font-semibold p-3">{h}</th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map(p => (
+              <tr key={p.id} className="border-t hover:bg-gray-50">
+                <td className="p-3">{p.id}</td>
+                <td className="p-3">{p.name}</td>
+                <td className="p-3">${p.price.toFixed(2)}</td>
+                <td className="p-3">{p.approvedBySales ? "✅ Yes" : "❌ No"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

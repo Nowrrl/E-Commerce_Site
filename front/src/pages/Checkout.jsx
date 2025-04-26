@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "../redux/cartSlice";
 import { clearBackendCart } from "../api/api";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // ✅ import axios
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function Checkout() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -26,43 +27,108 @@ function Checkout() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "cardNumber") {
+      const cleaned = value.replace(/\D/g, "").slice(0, 16);
+      const formatted = cleaned.replace(/(.{4})/g, "$1 ").trim();
+      setFormData((prev) => ({ ...prev, cardNumber: formatted }));
+    } else if (name === "expiry") {
+      let cleaned = value.replace(/\D/g, "").slice(0, 4);
+      if (cleaned.length >= 3) cleaned = cleaned.slice(0, 2) + "/" + cleaned.slice(2);
+      setFormData((prev) => ({ ...prev, expiry: cleaned }));
+    } else if (name === "cvv") {
+      const cleaned = value.replace(/\D/g, "").slice(0, 3);
+      setFormData((prev) => ({ ...prev, cvv: cleaned }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.address || !formData.cardNumber) {
-      alert("Please fill in all required fields.");
+    const cardDigits = formData.cardNumber.replace(/\s/g, "");
+    const cvvValid = /^\d{3}$/.test(formData.cvv);
+    const expiryValid = /^(\d{2})\/(\d{2})$/.test(formData.expiry);
+
+    if (!formData.name || !formData.address || !cardDigits) {
+      toast.error("❗ Please fill in all required fields.");
+      return;
+    }
+
+    if (cardDigits.length !== 16) {
+      toast.error("❗ Card number must be 16 digits.");
+      return;
+    }
+
+    if (!cvvValid) {
+      toast.error("❗ CVV must be exactly 3 digits.");
+      return;
+    }
+
+    if (!expiryValid) {
+      toast.error("❗ Expiry must be in MM/YY format.");
+      return;
+    }
+
+    const [expMonth, expYear] = formData.expiry.split("/").map(Number);
+    if (expMonth < 1 || expMonth > 12) {
+      toast.error("❗ Invalid expiry month. Must be between 01 and 12.");
+      return;
+    }
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear() % 100;
+
+    if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+      toast.error("❗ Card has expired.");
       return;
     }
 
     try {
-      await axios.post(
-        "/checkout", // ✅ this works with baseURL already set in App.jsx
+      const { data: message } = await axios.post(
+        "/checkout",
         null,
         {
           params: {
             userId: currentUser.id,
-            deliveryAddress: formData.address
-          }
+            deliveryAddress: formData.address,
+            email: currentUser.email,
+          },
         }
       );
+
+      const { data: allOrders } = await axios.get(`/orders/user/${currentUser.id}`);
+      const lastOrder = allOrders[allOrders.length - 1];
+      const lastOrderId = lastOrder.orderId;
+
+      const res = await axios.get(`/invoice/${lastOrderId}`, {
+        responseType: "blob",
+      });
+
+      const blobUrl = URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
 
       if (currentUser?.id) await clearBackendCart(currentUser.id);
       dispatch(clearCart());
 
-      alert("Order placed successfully!");
-      navigate("/");
+      navigate("/invoice-preview", {
+        state: {
+          invoiceUrl: blobUrl,
+          orderId: lastOrderId,
+        },
+      });
+
+      toast.success("✅ Order placed! Showing invoice...");
     } catch (error) {
       console.error("Error placing order:", error);
-      alert("There was an error processing your order. Please check console.");
+      toast.error("❌ Order failed, please try again.");
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-800 to-black p-6 text-white">
       <h1 className="text-3xl font-bold mb-6 text-center">Checkout</h1>
+
       <div className="max-w-3xl mx-auto bg-white text-black rounded-xl shadow-xl p-6 grid md:grid-cols-2 gap-6">
         <div>
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>

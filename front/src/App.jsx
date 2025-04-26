@@ -11,6 +11,8 @@ import {
 import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Home from "./pages/Home";
 import Login from "./pages/login";
@@ -23,6 +25,7 @@ import ClientWishlist from "./pages/ClientWishlist";
 import Checkout from "./pages/Checkout";
 import ViewedBefore from "./pages/ViewedBefore";
 import CategoryProducts from "./pages/CategoryProducts";
+import InvoiceView from "./pages/InvoiceView";
 
 // Admin
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -33,6 +36,11 @@ import OrderDashboard from "./pages/admin/OrderDashboard";
 import CommentApproval from "./pages/admin/CommentApproval";
 import PricingManager from "./pages/admin/PricingManager";
 import Reports from "./pages/admin/Reports";
+import ProductManagerHome from "./pages/admin/ProductManagerHome";
+import SalesManagerHome from "./pages/admin/SalesManagerHome";
+
+
+
 
 import { clearCart, setCartFromBackend } from "./redux/cartSlice";
 import { logout } from "./redux/user/userSlice";
@@ -144,9 +152,11 @@ function AppWrapper() {
         <Route path="/profile" element={<ClientProfile />} />
         <Route path="/clientorders" element={<ClientOrders />} />
         <Route path="/wishlist" element={<ClientWishlist />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={currentUser?.id ? <Checkout /> : <Navigate to="/login" replace state={{ from: "/checkout" }} />} />
         <Route path="/viewed" element={<ViewedBefore />} />
         <Route path="/category/:categoryName" element={<CategoryProducts />} />
+        <Route path="/invoice-preview" element={<InvoiceView />} />
+
 
 
         {/* Admin login page */}
@@ -155,6 +165,15 @@ function AppWrapper() {
         {/* Admin protected routes */}
         {isAdmin ? (
           <Route path="/admin" element={<AdminLayout />}>
+            {/* Split homepages */}
+            {savedAdmin?.role === "PRODUCT_MANAGER" && (
+              <Route index element={<ProductManagerHome />} />
+            )}
+            {savedAdmin?.role === "SALES_MANAGER" && (
+              <Route index element={<SalesManagerHome />} />
+            )}
+
+            {/* Admin Subpages */}
             <Route path="products" element={<ProductManager />} />
             <Route path="categories" element={<CategoryManager />} />
             <Route path="orders" element={<OrderDashboard />} />
@@ -166,9 +185,11 @@ function AppWrapper() {
           <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
         )}
 
+
         {/* Fallback */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <ToastContainer position="bottom-right" autoClose={3000} theme="colored" />
     </>
   );
 }

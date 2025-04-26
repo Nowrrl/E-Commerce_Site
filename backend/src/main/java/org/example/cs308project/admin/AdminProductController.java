@@ -4,13 +4,13 @@ import org.example.cs308project.loginregister.model.workers_model;
 import org.example.cs308project.loginregister.repository.workers_repository;
 import org.example.cs308project.products.product_model;
 import org.example.cs308project.products.product_service;
+import org.example.cs308project.products.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.example.cs308project.products.ProductDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +39,8 @@ public class AdminProductController {
         workers_model worker = workersRepository.findByUsername(username);
 
         if (worker != null && "PRODUCT_MANAGER".equals(worker.getRole())) {
-            p.setPrice(0.0); // new products from product manager default to 0 price
-            p.setApprovedBySales(false);
+            p.setPrice(0.0); // Default price
+            p.setApprovedBySales(false); // Awaiting approval
         }
 
         return productService.addProduct(p);
@@ -52,14 +52,14 @@ public class AdminProductController {
         String username = auth.getName();
         workers_model worker = workersRepository.findByUsername(username);
 
-        if (worker != null && "PRODUCT_MANAGER".equals(worker.getRole())) {
-            // Preserve price and category from existing product
-            product_model existingProduct = productService.getProductById(id)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
+        product_model existingProduct = productService.getProductById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-            p.setPrice(existingProduct.getPrice()); // Keep original price
-            p.setCategory(existingProduct.getCategory()); // Keep original category
-            p.setApprovedBySales(false); // Mark as not yet approved
+        if (worker != null && "PRODUCT_MANAGER".equals(worker.getRole())) {
+            // ✅ Keep approved price and approval status
+            p.setPrice(existingProduct.getPrice());
+            p.setApprovedBySales(existingProduct.isApprovedBySales());
+            p.setCategory(existingProduct.getCategory()); // Keep existing category
         }
 
         return productService.updateProduct(id, p);

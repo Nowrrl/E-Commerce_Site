@@ -99,7 +99,12 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8085/admin/categories")
+    const authHeader = localStorage.getItem("adminAuth");
+    axios.get("http://localhost:8085/admin/categories", {
+      headers: {
+        Authorization: authHeader,
+      }
+  })
       .then((res) => {
         const sorted = res.data.sort((a, b) => a.name.localeCompare(b.name));
         setCategories(sorted);
@@ -238,7 +243,8 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
   const filtered = backendProducts
     .filter(p => p.approvedBySales) // only show approved products
     .filter((product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) // ✅ search by description too
     )
     .filter((product) =>
       selectedCategory ? product.category.name === selectedCategory : true
@@ -247,6 +253,7 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
   const sorted = filtered.sort((a, b) => {
     if (sortBy === "priceAsc") return a.price - b.price;
     if (sortBy === "priceDesc") return b.price - a.price;
+    if (sortBy === "popularity") return b.soldCount - a.soldCount; // 👈 NEW LINE
     return a.name.localeCompare(b.name);
   });
 
@@ -285,6 +292,7 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
               <option value="name">Sort by Name</option>
               <option value="priceAsc">Price Low to High</option>
               <option value="priceDesc">Price High to Low</option>
+              <option value="popularity">Sort by Popularity</option>
             </select>
           </div>
 

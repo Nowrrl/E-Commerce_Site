@@ -16,11 +16,22 @@ export default function AdminLayout() {
   const isProductManager = currentUser?.role === "PRODUCT_MANAGER";
   const isSalesManager = currentUser?.role === "SALES_MANAGER";
 
+  const roleLabel = isProductManager
+    ? "Product Manager Console"
+    : isSalesManager
+    ? "Sales Manager Console"
+    : "Admin Console";
+
   return (
     <div className="flex flex-col h-screen">
       {/* Admin top bar */}
       <header className="bg-gray-800 text-white py-3 px-6 flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Admin Console</h1>
+        <h1
+          onClick={() => navigate("/admin")}
+          className="text-xl font-semibold cursor-pointer hover:underline"
+        >
+          {roleLabel}
+        </h1>
         <div>
           <span className="mr-4">Logged in as: {currentUser?.username}</span>
           <button

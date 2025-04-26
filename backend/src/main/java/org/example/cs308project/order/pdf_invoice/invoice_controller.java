@@ -24,11 +24,18 @@ public class invoice_controller {
                     .build());
 
             return new ResponseEntity<>(pdfData, headers, HttpStatus.OK);
-
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/email/{orderId}")
+    public ResponseEntity<?> emailInvoice(@PathVariable Long orderId, @RequestParam String email) {
+        try {
+            invoiceService.sendInvoiceToEmail(orderId, email);
+            return ResponseEntity.ok("Invoice sent to email.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to send invoice: " + e.getMessage());
         }
     }
 }

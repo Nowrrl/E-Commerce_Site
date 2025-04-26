@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-
 
 import { loginUser } from "../api/api";
 import { setUser, logout } from "../redux/user/userSlice";
@@ -13,6 +12,8 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const redirectBack = location.state?.from || "/";
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -36,10 +37,9 @@ const Login = () => {
           role: "CUSTOMER"
         }));
 
-        const cartRes = await axios.get(
-          `http://localhost:8085/cart/view`,
-          { params: { userId: id } }
-        );
+        const cartRes = await axios.get(`http://localhost:8085/cart/view`, {
+          params: { userId: id },
+        });
         const fullCart = await Promise.all(
           cartRes.data.map(async (item) => {
             const productRes = await axios.get(
@@ -50,7 +50,7 @@ const Login = () => {
         );
         dispatch(setCartFromBackend(fullCart));
 
-        navigate("/");
+        navigate(redirectBack); // ✅ redirect to original location
       } else {
         setErrorMessage(response.message);
       }
@@ -66,6 +66,13 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center text-white mb-6">
           Welcome Back
         </h2>
+
+        {location.state?.from === "/checkout" && (
+          <p className="text-red-500 mb-4 text-center">
+            ⚠️ Please log in to complete your checkout.
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"

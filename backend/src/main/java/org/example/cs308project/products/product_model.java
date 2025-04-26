@@ -25,6 +25,9 @@ public class product_model {
     @Column(name = "approved_by_sales")
     private boolean approvedBySales = false;
 
+    @Column(nullable = false)
+    private int soldCount = 0;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private category_model category;

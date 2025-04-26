@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ClientOrders = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -16,6 +18,7 @@ const ClientOrders = () => {
         setOrders(response.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
+        toast.error("❌ Failed to load orders.");
       }
     };
     fetchOrders();
@@ -27,18 +30,43 @@ const ClientOrders = () => {
         userId: currentUser.id,
         productId,
         text,
-        rating
+        rating,
       });
+      if (!text || text.trim() === "") {
+        toast.success("✅ Review submitted successfully!"); // No comment, no approval needed
+      } else {
+        toast.success("✅ Review submitted and awaiting approval."); // Comment exists, needs approval
+      }
 
-      alert("✅ Your review has been submitted and will be visible once approved by our moderation team.");
     } catch (err) {
       console.error("Failed to submit review:", err);
-      alert("❌ Failed to submit review. Please try again later.");
+      toast.error("❌ Failed to submit review.");
+    }
+
+  };
+
+  const handleDownloadInvoice = async (orderId) => {
+    try {
+      const response = await axios.get(`http://localhost:8085/invoice/${orderId}`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `invoice_order_${orderId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.success("📄 Invoice downloaded!");
+    } catch (error) {
+      console.error("Error downloading invoice:", error);
+      toast.error("❌ Failed to download invoice.");
     }
   };
 
   return (
     <div className="bg-gradient-to-b from-black to-purple-900 min-h-screen p-6 flex flex-col items-center">
+      <ToastContainer />
       <div className="bg-white text-black w-full max-w-5xl p-8 rounded-2xl shadow-xl">
         <h1 className="text-3xl font-bold mb-6 border-b pb-4">📦 My Orders</h1>
 
@@ -82,6 +110,13 @@ const ClientOrders = () => {
                       <p><strong>Quantity:</strong> {order.quantity}</p>
                       <p><strong>Total:</strong> <span className="text-red-600 font-bold">${order.totalPrice.toFixed(2)}</span></p>
                       <p><strong>Ordered on:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+
+                      <button
+                        onClick={() => handleDownloadInvoice(order.orderId)}
+                        className="mt-2 inline-block bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition text-sm"
+                      >
+                        📄 Download Invoice
+                      </button>
                     </div>
                   </div>
 
@@ -118,9 +153,8 @@ const ReviewForm = ({ orderId, productId, onSubmit }) => {
         {[1, 2, 3, 4, 5].map((star) => (
           <span
             key={star}
-            className={`cursor-pointer text-2xl ${
-              star <= rating ? "text-yellow-400" : "text-gray-300"
-            }`}
+            className={`cursor-pointer text-2xl ${star <= rating ? "text-yellow-400" : "text-gray-300"
+              }`}
             onClick={() => setRating(star)}
           >
             ★

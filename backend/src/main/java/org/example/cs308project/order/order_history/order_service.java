@@ -4,6 +4,8 @@ import org.example.cs308project.loginregister.model.register_model;
 import org.example.cs308project.loginregister.repository.register_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.example.cs308project.products.product_model;
+import org.example.cs308project.products.product_repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,12 @@ public class order_service {
 
     @Autowired
     private register_repository registerRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private product_repository productRepository;
 
     public List<order_model> getOrdersByUserId(Long userId) {
         Optional<register_model> user = registerRepository.findById(userId);
@@ -35,12 +43,42 @@ public class order_service {
         }
         return null;
     }
-    public order_model createOrder(order_model newOrder) {
-        return orderRepository.save(newOrder);
-    }
 
+    // 🛠 Updated createOrder()
+    public order_model createOrder(order_model newOrder) {
+        order_model savedOrder = orderRepository.save(newOrder);
+
+        // Update product's soldCount and quantity
+        product_model product = savedOrder.getProduct();
+        int quantityPurchased = savedOrder.getQuantity();
+
+        product.setSoldCount(product.getSoldCount() + quantityPurchased);
+        product.setQuantity(product.getQuantity() - quantityPurchased); // ✅ decrease stock
+        productRepository.save(product);
+
+        return savedOrder;
+    }
 
     public List<order_model> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    // 🛠 Updated placeOrder()
+    public order_model placeOrder(order_model order, List<OrderItem> items) {
+        order_model savedOrder = orderRepository.save(order);
+
+        for (OrderItem item : items) {
+            item.setOrder(savedOrder);
+            orderItemRepository.save(item);
+
+            product_model product = item.getProduct();
+            int quantityPurchased = item.getQuantity();
+
+            product.setSoldCount(product.getSoldCount() + quantityPurchased);
+            product.setQuantity(product.getQuantity() - quantityPurchased); // ✅ decrease stock
+            productRepository.save(product);
+        }
+
+        return savedOrder;
     }
 }

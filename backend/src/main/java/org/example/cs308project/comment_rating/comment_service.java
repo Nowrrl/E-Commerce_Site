@@ -33,6 +33,14 @@ public class comment_service {
             comment.setProduct(product.get());
             comment.setText(text);
             comment.setRating(rating);
+
+            // 🛠 NEW LOGIC:
+            if (text == null || text.trim().isEmpty()) {
+                comment.setApproved(true); // ✅ No comment -> auto-approved
+            } else {
+                comment.setApproved(false); // ❗ Has comment -> needs approval
+            }
+
             return commentRepository.save(comment);
         }
         return null;
@@ -64,6 +72,7 @@ public class comment_service {
             comment.setProduct(product.get());
             comment.setText(""); // Empty comment
             comment.setRating(rating);
+            comment.setApproved(true);
             commentRepository.save(comment);
             return "Rating added.";
         }

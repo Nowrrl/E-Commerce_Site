@@ -11,7 +11,6 @@ import org.example.cs308project.products.product_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,20 +29,21 @@ public class checkout_service {
     @Autowired
     private order_repository orderRepository;
 
-    public List<order_model> processCheckout(Long userId, String deliveryAddress) {
+    public Long processCheckout(Long userId, String deliveryAddress) {
         Optional<register_model> userOpt = registerRepository.findById(userId);
-        if (userOpt.isEmpty()) return new ArrayList<>();
+        if (userOpt.isEmpty()) throw new RuntimeException("User not found");
 
         register_model user = userOpt.get();
         List<cart_model> userCart = cartRepository.findByUserId(userId);
-        List<order_model> orders = new ArrayList<>();
+        if (userCart.isEmpty()) throw new RuntimeException("Cart is empty");
+
+        Long lastOrderId = null;
 
         for (cart_model cartItem : userCart) {
             Optional<product_model> productOpt = productRepository.findById(cartItem.getProductId());
             if (productOpt.isEmpty()) continue;
 
             product_model product = productOpt.get();
-
             if (product.getQuantity() < cartItem.getQuantity()) continue;
 
             product.setQuantity(product.getQuantity() - cartItem.getQuantity());
@@ -56,11 +56,13 @@ public class checkout_service {
             order.setTotalPrice(product.getPrice() * cartItem.getQuantity());
             order.setDeliveryAddress(deliveryAddress);
 
-            orders.add(orderRepository.save(order));
+            order_model savedOrder = orderRepository.save(order);
+            lastOrderId = savedOrder.getOrderId();  // Save last one to email invoice
         }
 
         cartRepository.deleteAll(userCart);
 
-        return orders;
+        if (lastOrderId == null) throw new RuntimeException("No orders were created");
+        return lastOrderId;
     }
 }
