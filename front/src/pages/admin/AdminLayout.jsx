@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../redux/user/userSlice';
+import { logoutUser, logoutAdmin } from '../../redux/user/userSlice';
 
 export default function AdminLayout() {
   const currentUser = useSelector(state => state.user.currentUser);
@@ -9,7 +9,7 @@ export default function AdminLayout() {
   const navigate = useNavigate();
 
   const handleAdminLogout = () => {
-    dispatch(logout());
+    dispatch(logoutAdmin());
     navigate('/admin/login');
   };
 
@@ -101,6 +101,14 @@ export default function AdminLayout() {
                   }
                 >
                   Reports
+                </NavLink>
+                <NavLink
+                  to="refunds"
+                  className={({ isActive }) =>
+                    isActive ? 'block font-semibold' : 'block hover:text-gray-300'
+                  }
+                >
+                  Refund Requests
                 </NavLink>
               </>
             )}

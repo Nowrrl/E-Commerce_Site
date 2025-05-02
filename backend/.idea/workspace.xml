@@ -5,37 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c56caa32-8ae0-4c5d-96ed-80a85138afac.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c56caa32-8ae0-4c5d-96ed-80a85138afac/storage_v2/_src_/schema/smartelecdb.zCUDAQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/admin/AdminProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/admin/AdminProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/checkout/checkout_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/checkout/checkout_controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/checkout/checkout_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/checkout/checkout_service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/pdf_invoice/invoice_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/pdf_invoice/invoice_controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/pdf_invoice/invoice_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/pdf_invoice/invoice_service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/admin/AdminProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/admin/AdminProductController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/checkout/checkout_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/order_history/order_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/order/pdf_invoice/invoice_service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_model.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/public/products_images/sonycamera23.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/config/SecurityConfig.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/Checkout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Checkout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/components/BannerCarousel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/components/BannerCarousel.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/pages/ClientOrders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/ClientOrders.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/admin/AdminLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/admin/AdminLayout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/admin/SalesManagerHome.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/admin/SalesManagerHome.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/pages/login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/redux/user/userSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/redux/user/userSlice.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,35 +62,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.Cs308ProjectApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;elmar&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kunal/CS308Project/front&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.Cs308ProjectApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kunal/CS308Project/front",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="backend" />

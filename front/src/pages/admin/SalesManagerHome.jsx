@@ -18,13 +18,19 @@ const cardData = [
     title: "Export Invoices",
     subtitle: "Generate and download invoices",
     icon: "🧾",
-    path: "/admin/reports", // Adjust path if needed
+    path: "/admin/reports", // You can split this later if needed
   },
   {
     title: "Notify Discounts",
     subtitle: "Alert customers about sales",
     icon: "🔔",
-    path: "/admin/pricing", // Reuse or split if you have discount page
+    path: "/admin/pricing", // Reusing pricing path for now
+  },
+  {
+    title: "Manage Refund Requests",
+    subtitle: "Approve or reject refund requests",
+    icon: "💸",
+    path: "/admin/refunds",
   },
 ];
 

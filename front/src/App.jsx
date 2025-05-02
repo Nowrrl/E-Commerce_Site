@@ -38,12 +38,14 @@ import PricingManager from "./pages/admin/PricingManager";
 import Reports from "./pages/admin/Reports";
 import ProductManagerHome from "./pages/admin/ProductManagerHome";
 import SalesManagerHome from "./pages/admin/SalesManagerHome";
+import RefundRequests from "./pages/admin/RefundRequests";
 
 
 
 
 import { clearCart, setCartFromBackend } from "./redux/cartSlice";
-import { logout } from "./redux/user/userSlice";
+import { logoutUser } from "./redux/user/userSlice";
+import { logoutAdmin } from "./redux/user/userSlice";
 
 // Axios config
 axios.defaults.baseURL = "http://localhost:8085";
@@ -100,7 +102,17 @@ function AppWrapper() {
 
   const handleLogout = () => {
     dispatch(clearCart());
-    dispatch(logout());
+    
+    if (isAdminPath) {
+      dispatch(logoutAdmin());
+      delete axios.defaults.headers.common["Authorization"];
+      localStorage.removeItem("adminAuth");
+      localStorage.removeItem("admin");
+      navigate("/admin/login");
+    } else {
+      dispatch(logoutUser());
+      navigate("/login")
+    }
 
     delete axios.defaults.headers.common["Authorization"];
     localStorage.removeItem("adminAuth");
@@ -180,6 +192,7 @@ function AppWrapper() {
             <Route path="comments" element={<CommentApproval />} />
             <Route path="pricing" element={<PricingManager />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="/admin/refunds" element={<RefundRequests />} />
           </Route>
         ) : (
           <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />

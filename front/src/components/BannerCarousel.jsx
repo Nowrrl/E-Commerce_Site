@@ -6,23 +6,23 @@ import "slick-carousel/slick/slick-theme.css";
 const banners = [
   {
     id: 1,
-    title: "Smart alış-verişə hazır ol!",
-    subtitle: "GEEPAS MƏHSULLARI",
-    price: "0 AZN",
+    title: "Be ready for shopping with Smart!",
+    subtitle: "New Products",
+    price: "$766.66",
     img: "/products_images/iphone15pro_1.jpg",
   },
   {
     id: 2,
-    title: "Endirimlərdən yararlanın!",
-    subtitle: "Yeni məhsullar",
-    price: "20%",
+    title: "Be ready for shopping with Smart!",
+    subtitle: "New Products",
+    price: "$466.66",
     img: "/products_images/samsung_2.jpg",
   },
   {
     id: 3,
-    title: "Keyfiyyətli məişət texnikası",
-    subtitle: "GEEPAS ilə",
-    price: "50%",
+    title: "Be ready for shopping with Smart!",
+    subtitle: "New Products",
+    price: "$1066.66",
     img: "/products_images/macbook16_4.jpeg",
   },
 ];
@@ -61,7 +61,7 @@ const BannerCarousel = () => {
               <h2 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight">{banner.title}</h2>
               <p className="text-xl text-gray-500 mt-3 font-medium">{banner.subtitle}</p>
               <div className="text-5xl font-extrabold text-blue-600 mt-5 -tracking-wide">
-                {banner.price} <span className="text-lg text-gray-400 font-normal">aylıq</span>
+                {banner.price} <span className="text-lg text-gray-400 font-normal">monthly</span>
               </div>
             </div>
 

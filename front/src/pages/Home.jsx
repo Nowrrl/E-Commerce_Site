@@ -28,6 +28,7 @@ const categoryIcons = {
   Smartwatch: "⌚",
   Monitor: "🖥️",
   Speaker: "🔊",
+  Photo_Camera: "📷",
   Default: "🛒"
 };
 
@@ -100,11 +101,7 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
 
   useEffect(() => {
     const authHeader = localStorage.getItem("adminAuth");
-    axios.get("http://localhost:8085/admin/categories", {
-      headers: {
-        Authorization: authHeader,
-      }
-  })
+    axios.get("http://localhost:8085/categories")
       .then((res) => {
         const sorted = res.data.sort((a, b) => a.name.localeCompare(b.name));
         setCategories(sorted);
@@ -147,17 +144,6 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
   );
 };
 
-
-const Banner = () => (
-  <div className="flex-1 bg-gray-200 p-8 text-center">
-    <h2 className="text-2xl font-bold">Smart alış-verişə hazır ol!</h2>
-    <p className="text-xl">GEEPAS MƏHSULLARI</p>
-    <div className="text-4xl font-bold my-4">
-      111 AZN <span className="text-lg">aylıq</span>
-    </div>
-    <img src="geepas_banner.png" alt="Geepas Products" className="mx-auto" />
-  </div>
-);
 
 const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
   <div className="relative p-4 bg-white rounded-2xl shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]">
@@ -211,7 +197,7 @@ const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
     {/* CTA Button */}
     <Link to={`/product/${product.id}`}>
       <button className="mt-3 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2 rounded-xl hover:brightness-110 transition">
-        Bir kliklə al
+        Buy Now
       </button>
     </Link>
   </div>

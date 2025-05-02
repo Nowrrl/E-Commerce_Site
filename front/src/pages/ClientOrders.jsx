@@ -33,16 +33,14 @@ const ClientOrders = () => {
         rating,
       });
       if (!text || text.trim() === "") {
-        toast.success("✅ Review submitted successfully!"); // No comment, no approval needed
+        toast.success("✅ Review submitted successfully!");
       } else {
-        toast.success("✅ Review submitted and awaiting approval."); // Comment exists, needs approval
+        toast.success("✅ Review submitted and awaiting approval.");
       }
-
     } catch (err) {
       console.error("Failed to submit review:", err);
       toast.error("❌ Failed to submit review.");
     }
-
   };
 
   const handleDownloadInvoice = async (orderId) => {
@@ -61,6 +59,20 @@ const ClientOrders = () => {
     } catch (error) {
       console.error("Error downloading invoice:", error);
       toast.error("❌ Failed to download invoice.");
+    }
+  };
+
+  const handleRefundRequest = async (orderId) => {
+    try {
+      await axios.post("http://localhost:8085/refunds/request", 
+        { orderId: orderId },
+        { withCredentials: true }
+      );
+      toast.success("✅ Refund request submitted successfully!");
+      // Optionally, reload orders here if you want to update UI
+    } catch (error) {
+      console.error("Error requesting refund:", error);
+      toast.error("❌ Failed to request refund.");
     }
   };
 
@@ -83,6 +95,8 @@ const ClientOrders = () => {
           <div className="space-y-10">
             {orders.map((order) => {
               const isDelivered = order.status.toLowerCase() === "delivered";
+              const deliveryDate = new Date(order.createdAt); // Assuming updatedAt is delivery date
+              const isWithin30Days = (new Date() - deliveryDate) <= 30 * 24 * 60 * 60 * 1000;
 
               return (
                 <motion.div
@@ -117,9 +131,20 @@ const ClientOrders = () => {
                       >
                         📄 Download Invoice
                       </button>
+
+                      {/* Refund button */}
+                      {isDelivered && isWithin30Days && (
+                        <button
+                          onClick={() => handleRefundRequest(order.orderId)}
+                          className="ml-4 mt-2 inline-block bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition text-sm"
+                        >
+                          💸 Request Refund
+                        </button>
+                      )}
                     </div>
                   </div>
 
+                  {/* Review form after delivery */}
                   {isDelivered && (
                     <ReviewForm
                       orderId={order.orderId}
@@ -153,8 +178,7 @@ const ReviewForm = ({ orderId, productId, onSubmit }) => {
         {[1, 2, 3, 4, 5].map((star) => (
           <span
             key={star}
-            className={`cursor-pointer text-2xl ${star <= rating ? "text-yellow-400" : "text-gray-300"
-              }`}
+            className={`cursor-pointer text-2xl ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
             onClick={() => setRating(star)}
           >
             ★

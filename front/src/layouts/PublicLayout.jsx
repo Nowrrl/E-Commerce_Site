@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearCart } from '../redux/cartSlice';
-import { logout } from '../redux/user/userSlice';
+import { logoutUser } from '../redux/user/userSlice';
 
 export default function PublicLayout() {
   const currentUser = useSelector(state => state.user.currentUser);
@@ -10,7 +10,7 @@ export default function PublicLayout() {
 
   const handleLogout = () => {
     dispatch(clearCart());
-    dispatch(logout());
+    dispatch(logoutUser());
     window.location.href = '/login';
   };
 

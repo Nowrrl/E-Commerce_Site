@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 import { loginUser } from "../api/api";
-import { setUser, logout } from "../redux/user/userSlice";
+import { setUser, logoutUser } from "../redux/user/userSlice";
 import { setCartFromBackend, clearCart } from "../redux/cartSlice";
 
 const Login = () => {
@@ -15,13 +15,17 @@ const Login = () => {
   const location = useLocation();
   const redirectBack = location.state?.from || "/";
 
+  // Get guest cart items from Redux
+  const guestCartItems = useSelector((state) => state.cart.items);
+
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(logout());
+
+    dispatch(logoutUser());
     dispatch(clearCart());
 
     try {
@@ -37,9 +41,24 @@ const Login = () => {
           role: "CUSTOMER"
         }));
 
+        // ✅ Merge guest cart into backend cart
+        if (guestCartItems.length > 0) {
+          await Promise.all(
+            guestCartItems.map((item) =>
+              axios.post(`http://localhost:8085/cart/add`, {
+                emailOrUsername: username, // backend expects username/email
+                productIdentifier: item.product.name, // using product name
+                quantity: item.quantity,
+              })
+            )
+          );
+        }
+
+        // ✅ Fetch full updated cart
         const cartRes = await axios.get(`http://localhost:8085/cart/view`, {
           params: { userId: id },
         });
+
         const fullCart = await Promise.all(
           cartRes.data.map(async (item) => {
             const productRes = await axios.get(
@@ -50,7 +69,7 @@ const Login = () => {
         );
         dispatch(setCartFromBackend(fullCart));
 
-        navigate(redirectBack); // ✅ redirect to original location
+        navigate(redirectBack); // ✅ redirect after login
       } else {
         setErrorMessage(response.message);
       }
@@ -78,6 +97,7 @@ const Login = () => {
             type="text"
             name="username"
             placeholder="Username"
+            value={credentials.username}
             onChange={handleChange}
             required
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
@@ -86,6 +106,7 @@ const Login = () => {
             type="password"
             name="password"
             placeholder="Password"
+            value={credentials.password}
             onChange={handleChange}
             required
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
@@ -100,6 +121,7 @@ const Login = () => {
             Login
           </button>
         </form>
+
         <p className="text-center text-white mt-4">
           Don&apos;t have an account?{" "}
           <a href="/register" className="text-blue-300 hover:underline">

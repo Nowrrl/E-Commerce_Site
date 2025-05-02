@@ -32,7 +32,7 @@ const userSlice = createSlice({
       state.currentUser = action.payload;
       localStorage.setItem("admin", JSON.stringify(action.payload));
     },
-    logout: (state) => {
+    logoutUser: (state) => {
       state.currentUser = {
         id: null,
         username: "Guest",
@@ -40,11 +40,20 @@ const userSlice = createSlice({
         email: "guest@example.com",
         role: null,
       };
-      localStorage.removeItem("user");
-      localStorage.removeItem("admin");
+      localStorage.removeItem("user"); // ✅ only remove user
+    },
+    logoutAdmin: (state) => {
+      state.currentUser = {
+        id: null,
+        username: "Guest",
+        avatar: "",
+        email: "guest@example.com",
+        role: null,
+      };
+      localStorage.removeItem("admin"); // ✅ only remove admin
     },
   },
 });
 
-export const { setUser, setAdminUser, logout } = userSlice.actions;
+export const { setUser, setAdminUser, logoutUser, logoutAdmin } = userSlice.actions;
 export default userSlice.reducer;

@@ -43,6 +43,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/comments/average-rating/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/comments/add-rating").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comments/ratings/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/refunds/request").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+
+
 
                         // ✅ Now allowing wishlist access publicly
                         .requestMatchers("/wishlist/**").permitAll()
