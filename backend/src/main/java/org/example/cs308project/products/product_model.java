@@ -25,6 +25,19 @@ public class product_model {
     @Column(name = "approved_by_sales")
     private boolean approvedBySales = false;
 
+
+    private Double originalPrice;
+
+    // Getter
+    public Double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    // Setter
+    public void setOriginalPrice(Double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
     @Column(nullable = false)
     private int soldCount = 0;
 

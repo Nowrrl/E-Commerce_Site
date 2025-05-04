@@ -10,10 +10,7 @@ import {
   removeFromWishlist,
 } from "../redux/wishlistSLice";
 
-import puzzleImage from "../img/puzzle.jpeg";
-import vacuumCleanerImage from "../img/vacuumcleaner.jpeg";
-import disneyImage from "../img/disney.jpeg";
-import stormImage from "../img/stormtrooper.jpeg";
+
 
 // Define categories (if needed)
 // Icon mapping based on category name
@@ -53,48 +50,6 @@ const getCategoryIcon = (name) => {
   return iconMap[match] || iconMap.default || "🛒";
 };
 
-// Define newProducts array with unique IDs
-const newProducts = [
-  {
-    category: "Yeni Məhsullar",
-    items: [
-      {
-        id: "1",
-        name: "Puzzle Assassin's Creed Valhalla",
-        price: 39,
-        oldPrice: 49,
-        image: puzzleImage,
-      },
-      {
-        id: "2",
-        name: "Beko B50 C 890 A TV & Vacuum Cleaner",
-        price: 1115,
-        oldPrice: 1200,
-        image: vacuumCleanerImage,
-      },
-      {
-        id: "3",
-        name: "Funko-POP Disney: Donald Duck",
-        price: 39,
-        oldPrice: 59,
-        image: disneyImage,
-      },
-      {
-        id: "4",
-        name: "Funko-POP Star Wars: Stormtrooper",
-        price: 39,
-        oldPrice: 59,
-        image: stormImage,
-      },
-    ],
-  },
-];
-
-const AllProducts = [
-  {
-    // placeholder
-  },
-];
 
 const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
   const [categories, setCategories] = useState([]);
@@ -191,7 +146,24 @@ const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
     {/* Product Info */}
     <div className="mt-3">
       <h3 className="font-medium text-gray-800 text-md truncate">{product.name}</h3>
-      <p className="text-red-500 font-bold text-lg">${product.price}</p>
+
+      {product.originalPrice && (
+        <div className="flex items-center gap-2">
+          <span className="line-through text-sm text-gray-500">${product.originalPrice.toFixed(2)}</span>
+          <span className="text-red-600 font-bold text-lg">${product.price.toFixed(2)}</span>
+        </div>
+      )}
+
+      {!product.originalPrice && (
+        <p className="text-red-500 font-bold text-lg">${product.price.toFixed(2)}</p>
+      )}
+
+      {/* Discount badge */}
+      {product.originalPrice && (
+        <span className="inline-block mt-1 text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">
+          {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+        </span>
+      )}
     </div>
 
     {/* CTA Button */}

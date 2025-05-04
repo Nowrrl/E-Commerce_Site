@@ -43,8 +43,20 @@ const CommentApproval = () => {
   };
 
   useEffect(() => {
-    loadPending();
-    loadApproved();
+    const waitForAuthAndLoad = async () => {
+      const savedAuth = localStorage.getItem("adminAuth");
+      if (savedAuth) {
+        axios.defaults.headers.common["Authorization"] = savedAuth;
+      }
+  
+      try {
+        await Promise.all([loadPending(), loadApproved()]);
+      } catch (err) {
+        console.error("Failed to load comments after auth:", err);
+      }
+    };
+  
+    waitForAuthAndLoad();
   }, []);
 
   return (

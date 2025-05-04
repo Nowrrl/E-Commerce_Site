@@ -12,17 +12,6 @@ import {
   removeFromWishlist,
 } from "../redux/wishlistSlice";
 
-// Example images imports...
-import iphone16Image from "../img/iphone16image.webp";
-import iphone16Thumb1 from "../img/iphone16image.webp";
-import iphone16Thumb2 from "../img/iphone16image.webp";
-import iphone16Thumb3 from "../img/iphone16image.webp";
-import otherProduct1 from "../img/iphone16image.webp";
-import otherProduct2 from "../img/iphone16image.webp";
-import otherProduct3 from "../img/iphone16image.webp";
-import otherProduct4 from "../img/iphone16image.webp";
-
-
 const Productdetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -312,8 +301,22 @@ const Productdetails = () => {
               </span>
             </button>
           </div>
-          <div className="mb-4">
-            <p className="text-3xl font-bold text-black">${productData.price}</p>
+          <div className="mb-4 flex items-center gap-4">
+            {productData.originalPrice ? (
+              <>
+                <span className="text-gray-500 line-through text-xl">
+                  ${productData.originalPrice.toFixed(2)}
+                </span>
+                <span className="text-3xl font-bold text-red-600">
+                  ${productData.price.toFixed(2)}
+                </span>
+                <span className="bg-green-100 text-green-800 text-sm font-medium px-2 py-1 rounded-full">
+                  {Math.round(100 - (productData.price / productData.originalPrice) * 100)}% OFF
+                </span>
+              </>
+            ) : (
+              <p className="text-3xl font-bold text-black">${productData.price}</p>
+            )}
           </div>
           <div className="mb-4">
             <p className="text-sm text-gray-700">

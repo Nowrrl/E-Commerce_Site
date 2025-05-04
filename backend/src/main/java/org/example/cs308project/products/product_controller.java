@@ -3,6 +3,7 @@ package org.example.cs308project.products;
 import org.example.cs308project.categories.category_model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -143,4 +144,23 @@ public class product_controller {
     public List<product_model> getByCategory(@PathVariable Long categoryId) {
         return productRepository.findByCategoryId(categoryId);
     }
+
+    @PutMapping("/admin/products/{id}/remove-discount")
+    public ResponseEntity<String> removeDiscount(@PathVariable Long id) {
+        Optional<product_model> optional = productRepository.findById(id);
+        if (optional.isPresent()) {
+            product_model product = optional.get();
+
+            if (product.getOriginalPrice() != null) {
+                product.setPrice(product.getOriginalPrice());
+                product.setOriginalPrice(null);  // Clear the backup
+                productRepository.save(product);
+                return ResponseEntity.ok("Discount removed successfully.");
+            } else {
+                return ResponseEntity.badRequest().body("No discount to remove.");
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

@@ -6,6 +6,8 @@ public class ProductDTO {
     private String model;
     private int quantity;
     private double price;
+    private Double originalPrice; // 👈 Add this
+
     private boolean approvedBySales;
     private String categoryName;
 
@@ -30,6 +32,9 @@ public class ProductDTO {
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+
+    public Double getOriginalPrice() { return originalPrice; }  // ✅ Getter
+    public void setOriginalPrice(Double originalPrice) { this.originalPrice = originalPrice; } // ✅ Setter
 
     public boolean isApprovedBySales() { return approvedBySales; }
     public void setApprovedBySales(boolean approvedBySales) { this.approvedBySales = approvedBySales; }

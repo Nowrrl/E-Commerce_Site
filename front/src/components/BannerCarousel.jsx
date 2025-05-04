@@ -2,6 +2,8 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
+
 
 const banners = [
   {
@@ -10,6 +12,7 @@ const banners = [
     subtitle: "New Products",
     price: "$766.66",
     img: "/products_images/iphone15pro_1.jpg",
+    productId: 1,
   },
   {
     id: 2,
@@ -17,6 +20,7 @@ const banners = [
     subtitle: "New Products",
     price: "$466.66",
     img: "/products_images/samsung_2.jpg",
+    productId: 2,
   },
   {
     id: 3,
@@ -24,6 +28,7 @@ const banners = [
     subtitle: "New Products",
     price: "$1066.66",
     img: "/products_images/macbook16_4.jpeg",
+    productId: 4,
   },
 ];
 
@@ -49,12 +54,19 @@ const BannerCarousel = () => {
     ),
   };
 
+  const navigate = useNavigate();
+
+  const handleClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto px-4">
       <Slider {...settings}>
         {banners.map((banner) => (
           <div
             key={banner.id}
+            onClick={() => handleClick(banner.productId)}
             className="flex flex-col items-center justify-center bg-gradient-to-br from-white via-gray-50 to-gray-100 p-10 rounded-2xl shadow-xl transition-transform transform hover:scale-[1.01] duration-700 animate-fadeIn"
           >
             <div className="text-center mb-6">

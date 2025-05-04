@@ -76,6 +76,7 @@ const ClientOrders = () => {
     }
   };
 
+
   return (
     <div className="bg-gradient-to-b from-black to-purple-900 min-h-screen p-6 flex flex-col items-center">
       <ToastContainer />
@@ -95,6 +96,8 @@ const ClientOrders = () => {
           <div className="space-y-10">
             {orders.map((order) => {
               const isDelivered = order.status.toLowerCase() === "delivered";
+              const isRefunded = order.status.toLowerCase() === "refunded";
+
               const deliveryDate = new Date(order.createdAt); // Assuming updatedAt is delivery date
               const isWithin30Days = (new Date() - deliveryDate) <= 30 * 24 * 60 * 60 * 1000;
 
@@ -115,10 +118,17 @@ const ClientOrders = () => {
                     <div className="flex-1 space-y-2">
                       <div className="flex justify-between items-center">
                         <h2 className="text-xl font-semibold">{order.product.name}</h2>
-                        <span className={`text-sm font-medium px-3 py-1 rounded-full 
-                          ${isDelivered ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
-                          {order.status}
-                        </span>
+                        <span className={`text-sm font-medium px-3 py-1 rounded-full ${
+                        order.status === "delivered"
+                          ? "bg-green-100 text-green-700"
+                          : order.status === "refunded"
+                          ? "bg-red-100 text-red-700"
+                          : order.status === "in-transit"
+                          ? "bg-blue-100 text-blue-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}>
+                        {order.status}
+                      </span>
                       </div>
                       <p><strong>Order ID:</strong> {order.orderId}</p>
                       <p><strong>Quantity:</strong> {order.quantity}</p>
@@ -133,7 +143,7 @@ const ClientOrders = () => {
                       </button>
 
                       {/* Refund button */}
-                      {isDelivered && isWithin30Days && (
+                      {isDelivered && !isRefunded && isWithin30Days && (
                         <button
                           onClick={() => handleRefundRequest(order.orderId)}
                           className="ml-4 mt-2 inline-block bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition text-sm"

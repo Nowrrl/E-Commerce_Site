@@ -6,18 +6,24 @@
   <component name="ChangeListManager">
     <list default="true" id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/admin/AdminProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/admin/AdminProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/comment_rating/comment_service.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/ProductDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/ProductDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/products/product_model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/refund/RefundController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/refund/RefundController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/wishlist/wishlist_repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/wishlist/wishlist_repository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/comment_rating/comment_service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/cs308project/products/product_model.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/components/BannerCarousel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/components/BannerCarousel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/ClientOrders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/ClientOrders.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/ClientProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/ClientProfile.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/admin/AdminLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/admin/AdminLayout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/admin/SalesManagerHome.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/admin/SalesManagerHome.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/redux/user/userSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/redux/user/userSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/Productdetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Productdetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/ShoppingCart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/ShoppingCart.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +89,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -114,8 +121,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
       </set>
     </attachedChunks>
   </component>
@@ -143,6 +150,8 @@
       <workItem from="1745332031424" duration="21651000" />
       <workItem from="1745459653949" duration="6733000" />
       <workItem from="1745549582242" duration="14660000" />
+      <workItem from="1746227533178" duration="943000" />
+      <workItem from="1746297955908" duration="18858000" />
     </task>
     <servers />
   </component>

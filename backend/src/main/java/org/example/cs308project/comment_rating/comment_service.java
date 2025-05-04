@@ -4,9 +4,12 @@ import org.example.cs308project.loginregister.model.register_model;
 import org.example.cs308project.loginregister.repository.register_repository;
 import org.example.cs308project.products.product_model;
 import org.example.cs308project.products.product_repository;
+import org.example.cs308project.notification.notification_model;
+import org.example.cs308project.notification.notification_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +24,9 @@ public class comment_service {
 
     @Autowired
     private product_repository productRepository;
+
+    @Autowired
+    private notification_repository notificationRepo;
 
     // Add a new comment
     public comment_model addComment(Long userId, Long productId, String text, int rating) {
@@ -95,37 +101,48 @@ public class comment_service {
                 .toList();
     }
 
-
     // Get all comments by a user
     public List<comment_model> getCommentsByUser(Long userId) {
         return commentRepository.findByUserId(userId);
     }
 
-    /**
-     * NEW
-     **/
     public List<comment_model> getPendingComments() {
         return commentRepository.findByApprovedFalse();
     }
 
-    /**
-     * NEW
-     **/
     public comment_model approveComment(Long commentId) {
         Optional<comment_model> opt = commentRepository.findById(commentId);
         if (opt.isPresent()) {
             comment_model cm = opt.get();
             cm.setApproved(true);
-            return commentRepository.save(cm);
+            comment_model updated = commentRepository.save(cm);
+
+            // Send notification to user
+            notification_model note = new notification_model();
+            note.setUser(cm.getUser());
+            note.setMessage("✅ Your comment was approved by admin.");
+            note.setTimestamp(LocalDateTime.now());
+            notificationRepo.save(note);
+
+            return updated;
         }
         throw new RuntimeException("Comment not found");
     }
 
-    /**
-     * NEW
-     **/
     public void rejectComment(Long commentId) {
-        commentRepository.deleteById(commentId);
+        Optional<comment_model> opt = commentRepository.findById(commentId);
+        if (opt.isPresent()) {
+            comment_model cm = opt.get();
+
+            // Send notification to user
+            notification_model note = new notification_model();
+            note.setUser(cm.getUser());
+            note.setMessage("❌ Your comment was rejected by admin.");
+            note.setTimestamp(LocalDateTime.now());
+            notificationRepo.save(note);
+
+            commentRepository.deleteById(commentId);
+        }
     }
 
     public comment_model editComment(Long commentId, String newText) {
@@ -153,7 +170,4 @@ public class comment_service {
         return commentRepository.findByApprovedTrue();
     }
 
-
-
 }
-

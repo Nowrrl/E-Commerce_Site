@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/comments/ratings/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/refunds/request").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                        .requestMatchers("/notifications/**").permitAll()
 
 
 

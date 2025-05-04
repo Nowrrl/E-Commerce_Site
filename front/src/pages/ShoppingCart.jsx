@@ -41,8 +41,8 @@ function ShoppingCart() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-purple-900 p-6 text-white">
-      <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+    <div className="border-t-1 border-white min-h-screen bg-gradient-to-b from-black to-purple-900 p-6 text-white">
+      <h1 className="text-center text-3xl font-bold mb-6">Shopping Cart</h1>
       <div className="bg-white text-black p-6 rounded-xl shadow-xl max-w-2xl mx-auto">
         {cartItems.length === 0 ? (
           <div className="text-center">

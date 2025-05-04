@@ -7,6 +7,12 @@ import org.example.cs308project.products.product_repository;
 import org.example.cs308project.loginregister.model.register_model;
 import org.example.cs308project.loginregister.repository.register_repository;
 import org.example.cs308project.service.EmailService;
+import org.springframework.http.ResponseEntity;
+import org.example.cs308project.notification.notification_repository;
+import org.example.cs308project.notification.notification_model;
+
+
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +37,9 @@ public class RefundController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private notification_repository notificationRepository;
 
     // Customer requests a refund
     @PostMapping("/refunds/request")
@@ -82,7 +91,7 @@ public class RefundController {
 
     // Admin approve refund
     @PutMapping("/admin/refunds/{refundId}/approve")
-    public String approveRefund(@PathVariable Long refundId) {
+    public ResponseEntity<order_model> approveRefund(@PathVariable Long refundId) {
         RefundRequest refund = refundRepository.findById(refundId)
                 .orElseThrow(() -> new RuntimeException("Refund request not found"));
 
@@ -98,21 +107,37 @@ public class RefundController {
         register_model user = userRepository.findById(refund.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // ✅ Update stock
         product.setQuantity(product.getQuantity() + 1);
-
         productRepository.save(product);
+
+        // ✅ Update order status to "refunded"
+        order_model order = orderRepository.findById(refund.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus("refunded");
+        orderRepository.save(order);
+
         refundRepository.save(refund);
 
-        // ✉️ Send Approval Email
+        // ✅ Send Notification
+        notification_model notification = notification_model.builder()
+                .user(user)
+                .message("✅ Your refund request for \"" + product.getName() + "\" has been approved.")
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
+
+        notificationRepository.save(notification);
+
+        // ✅ Email (optional)
         String subject = "Your Refund Has Been Approved - Smart Electronics";
         String text = "Dear " + user.getUsername() + ",\n\n" +
-                "Your refund request for the product \"" + product.getName() + "\" has been APPROVED.\n" +
-                "We have processed your refund. Thank you for shopping with us!\n\n" +
-                "Best regards,\nSmart Electronics Team";
-
+                "Your refund request for \"" + product.getName() + "\" has been APPROVED.\n" +
+                "We've updated your order status accordingly.\n\n" +
+                "Best,\nSmart Electronics";
         emailService.sendSimpleMessage(user.getEmail(), subject, text);
 
-        return "Refund approved and email sent!";
+        return ResponseEntity.ok(order);
     }
 
     // Admin reject refund
@@ -140,6 +165,22 @@ public class RefundController {
                 "Best regards,\nSmart Electronics Team";
 
         emailService.sendSimpleMessage(user.getEmail(), subject, text);
+
+
+        product_model product = productRepository.findById(refund.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        refundRepository.save(refund);
+
+        // 🔔 Send Notification
+        notification_model notification = notification_model.builder()
+                .user(user)
+                .message("❌ Your refund request for \"" + product.getName() + "\" has been approved.")
+                .read(false)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
+
+        notificationRepository.save(notification);
 
         return "Refund rejected and email sent!";
     }

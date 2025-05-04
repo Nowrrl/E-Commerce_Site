@@ -18,6 +18,7 @@ const ClientProfile = () => {
   const [recentOrders, setRecentOrders] = useState([]);
   const [topCategory, setTopCategory] = useState(null);
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
 
   const fetchProfile = async () => {
     try {
@@ -46,10 +47,20 @@ const ClientProfile = () => {
     }
   };
 
+  const fetchNotifications = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8085/notifications/${currentUser.id}`);
+      setNotifications(res.data);
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  };
+
   useEffect(() => {
     if (currentUser?.id) {
       fetchProfile();
       fetchRecentOrders();
+      fetchNotifications();
     }
   }, [currentUser]);
 
@@ -75,7 +86,7 @@ const ClientProfile = () => {
   if (!profile) return <div className="text-center p-10 text-white">Loading profile...</div>;
 
   return (
-    <div className={`${bgColor} min-h-screen transition duration-500`}>
+    <div className={`${bgColor} border-t-1 border-white min-h-screen transition duration-500`}>
       <div className="flex justify-end p-4">
         <button
           onClick={() => dispatch(toggleTheme())}
@@ -124,6 +135,28 @@ const ClientProfile = () => {
               </div>
             )}
           </div>
+        </motion.div>
+        
+        {/* Notification Card */}
+        <motion.div
+          className={`${cardColor} p-6 rounded-xl shadow-lg`}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          <h2 className="text-2xl font-bold text-pink-500 mb-4">🔔 Notifications</h2>
+          {notifications.length === 0 ? (
+            <p>No new notifications.</p>
+          ) : (
+            <ul className="space-y-3">
+              {notifications.map((note) => (
+                <li key={note.id} className="p-3 border rounded-lg shadow-sm">
+                  <p className="text-sm">{note.message}</p>
+                  <p className="text-xs text-gray-400">{new Date(note.timestamp).toLocaleString()}</p>
+                </li>
+              ))}
+            </ul>
+          )}
         </motion.div>
 
         {/* Loyalty Card */}

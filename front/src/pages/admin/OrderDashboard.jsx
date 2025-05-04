@@ -55,17 +55,24 @@ export default function OrderDashboard() {
                   <td className="px-4 py-3 border-b border-gray-200 font-semibold text-red-600">${o.total.toFixed(2)}</td>
                   <td className="px-4 py-3 border-b border-gray-200">{o.address}</td>
                   <td className="px-4 py-3 border-b border-gray-200">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      o.status === "processing"
-                        ? "bg-yellow-200 text-yellow-800"
-                        : o.status === "in-transit"
-                        ? "bg-blue-200 text-blue-800"
-                        : "bg-green-200 text-green-800"
-                    }`}>
-                      {o.status}
-                    </span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    o.status === "processing"
+                      ? "bg-yellow-200 text-yellow-800"
+                      : o.status === "in-transit"
+                      ? "bg-blue-200 text-blue-800"
+                      : o.status === "delivered"
+                      ? "bg-green-200 text-green-800"
+                      : o.status === "refunded"
+                      ? "bg-red-200 text-red-800"
+                      : "bg-gray-200 text-gray-800"
+                  }`}>
+                    {o.status}
+                  </span>
                   </td>
                   <td className="px-4 py-3 border-b border-gray-200">
+                  {o.status === "refunded" ? (
+                    <span className="text-gray-400 italic text-sm">Status locked</span>
+                  ) : (
                     <select
                       value={o.status}
                       onChange={(e) => updateStatus(o.id, e.target.value)}
@@ -75,7 +82,8 @@ export default function OrderDashboard() {
                       <option value="in-transit">in-transit</option>
                       <option value="delivered">delivered</option>
                     </select>
-                  </td>
+                  )}
+                </td>
                 </tr>
               ))}
             </tbody>

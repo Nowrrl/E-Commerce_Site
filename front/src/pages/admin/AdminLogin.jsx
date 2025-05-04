@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -9,13 +9,6 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const savedAuth = localStorage.getItem("adminAuth");
-    if (savedAuth) {
-      axios.defaults.headers.common["Authorization"] = savedAuth;
-    }
-  }, []);
 
   const handleChange = (e) => {
     setCreds({ ...creds, [e.target.name]: e.target.value });
@@ -32,32 +25,31 @@ export default function AdminLogin() {
 
     const token = btoa(`${username}:${password}`);
     const authHeader = `Basic ${token}`;
-    localStorage.setItem("adminAuth", authHeader);
-    axios.defaults.headers.common["Authorization"] = authHeader;
 
     try {
-      const res = await axios.post("http://localhost:8085/user/worker/login", {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        "http://localhost:8085/user/worker/login",
+        { username, password },
+        {
+          headers: {
+            Authorization: authHeader,
+          },
+        }
+      );
 
       if (res.data.message === "Worker login successful") {
         const { id, role } = res.data.worker;
 
-        const adminUser = {
-          id,
-          username,
-          role,
-        };
+        // Store auth in localStorage for future authenticated admin requests
+        localStorage.setItem("adminAuth", authHeader);
 
-        dispatch(setAdminUser(adminUser));
+        dispatch(setAdminUser({ id, username, role }));
 
         if (role === "PRODUCT_MANAGER" || role === "SALES_MANAGER") {
           navigate("/admin");
         } else {
           navigate("/admin/login");
         }
-
       } else {
         setError(res.data.message || "Login failed");
       }
@@ -69,7 +61,6 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-black relative overflow-hidden">
-      {/* Fancy blurred background shapes */}
       <div className="absolute w-72 h-72 bg-purple-600 opacity-30 rounded-full blur-3xl top-10 left-10"></div>
       <div className="absolute w-72 h-72 bg-indigo-600 opacity-30 rounded-full blur-3xl bottom-10 right-10"></div>
 

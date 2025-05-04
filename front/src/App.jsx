@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Home from "./pages/Home";
 import Login from "./pages/login";
-import Register from "./pages/Register";
+import Register from "./pages/register";
 import ProductDetails from "./pages/Productdetails";
 import ShoppingCart from "./pages/ShoppingCart";
 import ClientProfile from "./pages/ClientProfile";

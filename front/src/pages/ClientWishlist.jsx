@@ -27,7 +27,7 @@ const ClientWishlist = () => {
     };
 
     return (
-        <div className="bg-gradient-to-b from-black to-purple-900 min-h-screen p-6 text-white">
+        <div className="border-t-1 border-white bg-gradient-to-b from-black to-purple-900 min-h-screen p-6 text-white">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold mb-6">My Wishlist</h1>
 
