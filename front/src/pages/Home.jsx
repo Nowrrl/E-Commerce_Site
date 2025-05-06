@@ -103,34 +103,24 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
 const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
   <div className="relative p-4 bg-white rounded-2xl shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]">
     {/* Heart Icon */}
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        toggleWishlist(product.id);
-      }}
-      className="absolute top-3 right-3 text-gray-300 hover:scale-110 transition-transform"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill={isInWishlist ? "url(#grad)" : "none"}
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="w-7 h-7"
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleWishlist(product.id);
+        }}
+        className="absolute top-4 right-6 z-10 focus:outline-none cursor-pointer"
       >
-        <defs>
-          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#ec4899" />
-            <stop offset="100%" stopColor="#8b5cf6" />
-          </linearGradient>
-        </defs>
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M21.8 6.8a5.5 5.5 0 00-7.7 0L12 8.9l-2.1-2.1a5.5 5.5 0 00-7.7 7.7l9.8 9.8 9.8-9.8a5.5 5.5 0 000-7.7z"
-        />
-      </svg>
-    </button>
+        <span
+          className={
+              "text-4xl leading-none transition-transform hover:scale-110 " +
+              (isInWishlist
+                ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent"
+                    : "text-gray-300")
+            }
+        >
+          {isInWishlist ? "♥" : "♡"}
+        </span>
+      </button>
 
     {/* Product Image */}
     <Link to={`/product/${product.id}`}>
@@ -168,7 +158,7 @@ const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
 
     {/* CTA Button */}
     <Link to={`/product/${product.id}`}>
-      <button className="mt-3 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2 rounded-xl hover:brightness-110 transition">
+      <button className="mt-3 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2 rounded-xl hover:brightness-110 transition cursor-pointer">
         Buy Now
       </button>
     </Link>
@@ -310,15 +300,6 @@ const Home = () => {
 
   return (
     <div className="border-t-1 border-white p-10 bg-gradient-to-b from-black to-purple-900">
-      {/* Example: Button to go to Cart near top */}
-      <div className="mb-6">
-        <Link
-          to="/wishlist"
-          className="inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
-        >
-          Wishlist
-        </Link>
-      </div>
 
       <div className="flex">
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />

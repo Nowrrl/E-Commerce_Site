@@ -141,8 +141,6 @@ const Productdetails = () => {
     }
   };
 
-
-
   const totalPrice = productData.price * quantity;
   const monthlyInstallment = totalPrice / Math.max(parseInt(installment, 10), 1);
 
@@ -201,14 +199,6 @@ const Productdetails = () => {
             and installment plans.
           </p>
           <p>For more details, please proceed to the payment page.</p>
-        </div>
-      ),
-    },
-    {
-      title: "Product Reviews",
-      content: (
-        <div className="text-sm text-gray-300">
-          <p>No reviews yet. (Or show your own logic here.)</p>
         </div>
       ),
     },
@@ -400,7 +390,7 @@ const Productdetails = () => {
               <span className="font-medium text-white">{section.title}</span>
               <span className="text-white">
                 <svg
-                  className={'h-4 w-4 transform transition-transform duration-200 ${openIndexes.includes(index) ? "rotate-90" : ""}'}
+                  className={`h-4 w-4 transform transition-transform duration-200 ${openIndexes.includes(index) ? "rotate-90" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -412,7 +402,7 @@ const Productdetails = () => {
                 </svg>
               </span>
             </button>
-            <div className={'px-4 pb-4 overflow-hidden transition-all ease-in-out duration-300 ${openIndexes.includes(index) ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}'}>
+            <div className={`px-4 pb-4 overflow-hidden transition-all ease-in-out duration-300 ${openIndexes.includes(index) ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
               {section.content}
             </div>
           </div>
