@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/admin/AdminReportController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/ClientProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/ClientProfile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/pages/Productdetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/Productdetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/admin/Reports.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/admin/Reports.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +66,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kunal/CS308Project/backend",
+    "last_opened_file_path": "C:/Users/kunal/CS308Project/front",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -144,6 +141,7 @@
       <workItem from="1746360344773" duration="2124000" />
       <workItem from="1746464505323" duration="259000" />
       <workItem from="1746465504044" duration="6475000" />
+      <workItem from="1746646218185" duration="6303000" />
     </task>
     <servers />
   </component>

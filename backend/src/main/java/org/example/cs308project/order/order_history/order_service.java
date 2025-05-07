@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.example.cs308project.products.product_model;
 import org.example.cs308project.products.product_repository;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +63,19 @@ public class order_service {
 
     public List<order_model> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+
+     // Returns total revenue, cost (50% of sales), and profit between two dates.
+    public Map<String, Double> calculateReport(LocalDateTime from, LocalDateTime to) {
+        Double revenue = orderRepository.sumRevenueBetween(from, to);
+        Double cost    = orderRepository.sumCostBetween(from, to);
+        double profit  = revenue - cost;
+        return Map.of(
+                "revenue", revenue,
+                "cost",    cost,
+                "profit",  profit
+        );
     }
 
     // 🛠 Updated placeOrder()
