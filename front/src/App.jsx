@@ -39,7 +39,7 @@ import Reports from "./pages/admin/Reports";
 import ProductManagerHome from "./pages/admin/ProductManagerHome";
 import SalesManagerHome from "./pages/admin/SalesManagerHome";
 import RefundRequests from "./pages/admin/RefundRequests";
-
+import AdminInvoiceList from './pages/admin/AdminInvoiceList';
 
 
 
@@ -102,7 +102,7 @@ function AppWrapper() {
 
   const handleLogout = () => {
     dispatch(clearCart());
-    
+
     if (isAdminPath) {
       dispatch(logoutAdmin());
       delete axios.defaults.headers.common["Authorization"];
@@ -171,6 +171,7 @@ function AppWrapper() {
 
 
 
+
         {/* Admin login page */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
@@ -193,6 +194,7 @@ function AppWrapper() {
             <Route path="pricing" element={<PricingManager />} />
             <Route path="reports" element={<Reports />} />
             <Route path="/admin/refunds" element={<RefundRequests />} />
+            <Route path="/admin/invoices" element={<AdminInvoiceList />} />
           </Route>
         ) : (
           <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />

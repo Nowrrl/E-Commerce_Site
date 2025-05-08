@@ -18,7 +18,7 @@ const cardData = [
     title: "Export Invoices",
     subtitle: "Generate and download invoices",
     icon: "🧾",
-    path: "/admin/reports", // You can split this later if needed
+    path: "/admin/invoices", // You can split this later if needed
   },
   {
     title: "Notify Discounts",

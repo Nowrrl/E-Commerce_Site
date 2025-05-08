@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11e85a4f-882f-454d-8e6d-aa1d7554bf8c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/admin/AdminReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/pdf_invoice/AdminInvoiceController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front/src/pages/admin/AdminInvoiceList.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_repository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/cs308project/order/order_history/order_service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/App.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/pages/admin/Reports.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/admin/Reports.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front/src/pages/admin/SalesManagerHome.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/pages/admin/SalesManagerHome.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +68,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kunal/CS308Project/front",
+    "last_opened_file_path": "C:/Users/kunal/CS308Project/backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -142,6 +144,7 @@
       <workItem from="1746464505323" duration="259000" />
       <workItem from="1746465504044" duration="6475000" />
       <workItem from="1746646218185" duration="6303000" />
+      <workItem from="1746658203326" duration="5786000" />
     </task>
     <servers />
   </component>
