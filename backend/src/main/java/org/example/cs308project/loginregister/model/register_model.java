@@ -20,6 +20,16 @@ public class register_model {
 
     @Column(name = "delivery_address")
     private String deliveryAddress;
+    private String taxId;
+
+    // Getters and Setters
+    public String getTaxId() {
+        return taxId;
+    }
+
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
+    }
 
     @Transient // ✅ not stored in DB
     private int loyaltyPoints;

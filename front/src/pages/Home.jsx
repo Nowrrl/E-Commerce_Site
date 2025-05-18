@@ -99,10 +99,15 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
   );
 };
 
+const ProductCard = ({ product, isInWishlist, toggleWishlist }) => {
+  // Calculate discount percentage
+  const discountPercentage = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : null;
 
-const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
-  <div className="relative p-4 bg-white rounded-2xl shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]">
-    {/* Heart Icon */}
+  return (
+    <div className="relative p-4 bg-white rounded-2xl shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]">
+      {/* Heart Icon */}
       <button
         onClick={(e) => {
           e.stopPropagation();
@@ -112,58 +117,56 @@ const ProductCard = ({ product, isInWishlist, toggleWishlist }) => (
       >
         <span
           className={
-              "text-4xl leading-none transition-transform hover:scale-110 " +
-              (isInWishlist
-                ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent"
-                    : "text-gray-300")
-            }
+            "text-4xl leading-none transition-transform hover:scale-110 " +
+            (isInWishlist
+              ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent"
+              : "text-gray-300")
+          }
         >
           {isInWishlist ? "♥" : "♡"}
         </span>
       </button>
 
-    {/* Product Image */}
-    <Link to={`/product/${product.id}`}>
-      <div className="w-full h-44 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
-        <img
-          src={product.imageUrl || "/products_images/default_product_image.png"}
-          alt={product.name}
-          className="object-contain w-full h-full p-2"
-        />
-      </div>
-    </Link>
-
-    {/* Product Info */}
-    <div className="mt-3">
-      <h3 className="font-medium text-gray-800 text-md truncate">{product.name}</h3>
-
-      {product.originalPrice && (
-        <div className="flex items-center gap-2">
-          <span className="line-through text-sm text-gray-500">${product.originalPrice.toFixed(2)}</span>
-          <span className="text-red-600 font-bold text-lg">${product.price.toFixed(2)}</span>
+      {/* Product Image */}
+      <Link to={`/product/${product.id}`}>
+        <div className="w-full h-44 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
+          <img
+            src={product.imageUrl || "/products_images/default_product_image.png"}
+            alt={product.name}
+            className="object-contain w-full h-full p-2"
+          />
         </div>
-      )}
+      </Link>
 
-      {!product.originalPrice && (
-        <p className="text-red-500 font-bold text-lg">${product.price.toFixed(2)}</p>
-      )}
+      {/* Product Info */}
+      <div className="mt-3">
+        <h3 className="font-medium text-gray-800 text-md truncate">{product.name}</h3>
 
-      {/* Discount badge */}
-      {product.originalPrice && (
-        <span className="inline-block mt-1 text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">
-          {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
-        </span>
-      )}
+        {/* Price and Discount */}
+        {product.originalPrice && product.originalPrice > product.price ? (
+          <div className="flex items-center gap-2">
+            <span className="line-through text-sm text-gray-500">${product.originalPrice.toFixed(2)}</span>
+            <span className="text-red-600 font-bold text-lg">${product.price.toFixed(2)}</span>
+            {discountPercentage && (
+              <span className="text-green-600 font-semibold text-sm">
+                ({discountPercentage}% OFF)
+              </span>
+            )}
+          </div>
+        ) : (
+          <p className="text-red-500 font-bold text-lg">${product.price.toFixed(2)}</p>
+        )}
+      </div>
+
+      {/* CTA Button */}
+      <Link to={`/product/${product.id}`}>
+        <button className="mt-3 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2 rounded-xl hover:brightness-110 transition cursor-pointer">
+          Buy Now
+        </button>
+      </Link>
     </div>
-
-    {/* CTA Button */}
-    <Link to={`/product/${product.id}`}>
-      <button className="mt-3 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2 rounded-xl hover:brightness-110 transition cursor-pointer">
-        Buy Now
-      </button>
-    </Link>
-  </div>
-);
+  );
+};
 
 
 

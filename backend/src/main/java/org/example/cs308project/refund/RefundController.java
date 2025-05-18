@@ -6,7 +6,7 @@ import org.example.cs308project.products.product_model;
 import org.example.cs308project.products.product_repository;
 import org.example.cs308project.loginregister.model.register_model;
 import org.example.cs308project.loginregister.repository.register_repository;
-import org.example.cs308project.service.EmailService;
+import org.example.cs308project.loginregister.service.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.example.cs308project.notification.notification_repository;
 import org.example.cs308project.notification.notification_model;

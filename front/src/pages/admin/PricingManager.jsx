@@ -6,7 +6,7 @@ axios.defaults.withCredentials = true;
 
 export default function PricingManager() {
   const [products, setProducts] = useState([]);
-  const [priceUpdate, setPriceUpdate] = useState({ productId: '', discount: '' });
+  const [priceUpdate, setPriceUpdate] = useState({ productId: '', price: '', discount: '' });
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -19,48 +19,87 @@ export default function PricingManager() {
     axios.get('/admin/products', {
       headers: { Authorization: authHeader }
     })
-      .then(res => setProducts(res.data))
-      .catch(err => console.error("Failed to load products:", err));
+      .then(res => {
+        if (res.data && Array.isArray(res.data)) {
+          setProducts(res.data);
+        } else {
+          setProducts([]);
+          console.error("Invalid response format:", res.data);
+        }
+      })
+      .catch(err => {
+        console.error("Failed to load products:", err);
+        setProducts([]);
+      });
   }
 
-  function calculateDiscountedPrice(productId, discountRate) {
-    const product = products.find(p => p.id === parseInt(productId));
-    if (!product || !discountRate) return 0;
-
-    const basePrice = product.originalPrice ?? product.price;
-    const discountAmount = (basePrice * discountRate) / 100;
-    return Math.max(0, basePrice - discountAmount);
-  }
-
-  function applyDiscount() {
+  function applyPriceUpdate() {
     const authHeader = localStorage.getItem("adminAuth");
-    const { productId, discount } = priceUpdate;
-    const parsedDiscount = parseFloat(discount);
+    const { productId, price } = priceUpdate;
 
-    if (!productId || isNaN(parsedDiscount) || parsedDiscount <= 0 || parsedDiscount >= 100) {
-      setMessage("❗ Please select a product and a valid discount (1–99%).");
+    if (!productId || isNaN(price) || price <= 0) {
+      setMessage("❗ Please select a product and enter a valid price.");
       return;
     }
 
-    const product = products.find(p => p.id === parseInt(productId));
-    if (!product) return setMessage("❗ Product not found.");
-
-    const basePrice = product.originalPrice ?? product.price;
-    const discountedPrice = (basePrice * (1 - parsedDiscount / 100)).toFixed(2);
-
-    axios.put(`/admin/products/${productId}/price`, { price: discountedPrice }, {
-      headers: { Authorization: authHeader }
+    axios.put(`/admin/products/${productId}/price`, 
+      { price: parseFloat(price) }, 
+      {
+        headers: { Authorization: authHeader }
+      }
+    )
+    .then(() => {
+      setMessage("✅ Price updated successfully.");
+      setPriceUpdate({ productId: '', price: '', discount: '' });
+      loadProducts();
     })
-      .then(() => {
-        setMessage("✅ Discount applied and price updated.");
-        setPriceUpdate({ productId: '', discount: '' });
-        loadProducts();
-      })
-      .catch(err => {
-        console.error("Failed to apply discount:", err);
-        setMessage("❌ Failed to apply discount.");
-      });
+    .catch(err => {
+      console.error("Failed to update price:", err.response?.data || err.message);
+      setMessage("❌ Failed to update price.");
+    });
   }
+
+  function applyDiscountUpdate() {
+  const authHeader = localStorage.getItem("adminAuth");
+  const { productId, discount } = priceUpdate;
+
+  if (!productId || isNaN(discount) || discount <= 0 || discount >= 100) {
+    setMessage("❗ Please enter a valid discount (1-99%).");
+    return;
+  }
+
+  const product = products.find(p => p.id === parseInt(productId));
+  if (!product) return;
+
+  // Check if original price is already stored
+  const basePrice = product.originalPrice ?? product.price;
+  
+  // If the original price is not set, use the current price as the base price
+  const originalPrice = product.originalPrice ? product.originalPrice : product.price;
+
+  // Calculate the discounted price
+  const discountedPrice = (originalPrice * (1 - discount / 100)).toFixed(2);
+
+  axios.put(`/admin/products/${productId}/price`, 
+    { 
+      price: parseFloat(discountedPrice),
+      originalPrice: parseFloat(originalPrice) // Preserve the original price
+    }, 
+    {
+      headers: { Authorization: authHeader }
+    }
+  )
+  .then(() => {
+    setMessage("✅ Discount applied successfully.");
+    setPriceUpdate({ productId: '', price: '', discount: '' });
+    loadProducts();
+  })
+  .catch(err => {
+    console.error("Failed to apply discount:", err.response?.data || err.message);
+    setMessage("❌ Failed to apply discount.");
+  });
+}
+
 
   function removeDiscount(productId) {
     const authHeader = localStorage.getItem("adminAuth");
@@ -68,14 +107,14 @@ export default function PricingManager() {
     axios.put(`/admin/products/${productId}/remove-discount`, null, {
       headers: { Authorization: authHeader }
     })
-      .then(() => {
-        setMessage("✅ Discount removed successfully.");
-        loadProducts();
-      })
-      .catch(err => {
-        console.error("Failed to remove discount:", err);
-        setMessage("❌ Failed to remove discount.");
-      });
+    .then(() => {
+      setMessage("✅ Discount removed successfully.");
+      loadProducts();
+    })
+    .catch(err => {
+      console.error("Failed to remove discount:", err.response?.data || err.message);
+      setMessage("❌ Failed to remove discount.");
+    });
   }
 
   return (
@@ -83,53 +122,11 @@ export default function PricingManager() {
       <h1 className="text-3xl font-bold mb-8">🛠️ Pricing & Discount Manager</h1>
 
       {message && (
-        <div className="mb-6 p-4 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-lg font-medium text-center">
+        <div className={`mb-6 p-4 rounded-lg font-medium text-center ${message.startsWith("✅") ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
           {message}
         </div>
       )}
 
-      {/* Discount Form */}
-      <div className="bg-white text-black rounded-2xl shadow-lg p-6 mb-10 max-w-3xl mx-auto">
-        <h2 className="text-lg font-bold mb-4">📉 Apply Discount</h2>
-        <div className="flex flex-col md:flex-row gap-4 items-end">
-          <select
-            value={priceUpdate.productId}
-            onChange={e => setPriceUpdate({ ...priceUpdate, productId: e.target.value })}
-            className="border p-2 rounded w-full md:w-1/2"
-          >
-            <option value="">Select Product</option>
-            {products.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
-
-          <input
-            type="number"
-            placeholder="Discount %"
-            className="border p-2 rounded w-full md:w-1/4"
-            value={priceUpdate.discount}
-            onChange={e => setPriceUpdate({ ...priceUpdate, discount: e.target.value })}
-          />
-
-          <button
-            onClick={applyDiscount}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-          >
-            Apply Discount
-          </button>
-        </div>
-
-        {priceUpdate.productId && priceUpdate.discount && (
-          <p className="mt-4 text-gray-800 font-medium">
-            Final price after {priceUpdate.discount}% discount:{" "}
-            <span className="font-bold text-red-600">
-              ${calculateDiscountedPrice(priceUpdate.productId, priceUpdate.discount).toFixed(2)}
-            </span>
-          </p>
-        )}
-      </div>
-
-      {/* Products Table */}
       <div className="bg-white text-black rounded-2xl shadow-lg p-6">
         <h2 className="text-lg font-bold mb-4">📦 Product List</h2>
         <table className="w-full table-auto border">
@@ -138,43 +135,57 @@ export default function PricingManager() {
               <th className="p-2 text-left">ID</th>
               <th className="p-2 text-left">Name</th>
               <th className="p-2 text-left">Current Price</th>
-              <th className="p-2 text-left">Original Price</th>
+              <th className="p-2 text-left">New Price</th>
               <th className="p-2 text-left">Discount %</th>
-              <th className="p-2 text-left">Approved</th>
-              <th className="p-2 text-left">Action</th>
+              <th className="p-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {products.map(p => {
-              const discountPercent = p.originalPrice
-                ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)
-                : null;
-
-              return (
-                <tr key={p.id} className="border-t">
-                  <td className="p-2">{p.id}</td>
-                  <td className="p-2">{p.name}</td>
-                  <td className="p-2 text-red-600 font-bold">${p.price.toFixed(2)}</td>
-                  <td className="p-2 text-gray-500 line-through">
-                    {p.originalPrice ? `$${p.originalPrice.toFixed(2)}` : '-'}
-                  </td>
-                  <td className="p-2 text-sm text-purple-700 font-semibold">
-                    {discountPercent ? `${discountPercent}%` : '–'}
-                  </td>
-                  <td className="p-2">{p.approvedBySales ? "✅ Yes" : "❌ No"}</td>
-                  <td className="p-2">
-                    {p.originalPrice && (
-                      <button
-                        onClick={() => removeDiscount(p.id)}
-                        className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                      >
-                        Remove Discount
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
+            {products.map((p) => (
+              <tr key={p.id} className="border-t hover:bg-gray-50 transition">
+                <td className="p-2">{p.id}</td>
+                <td className="p-2">{p.name}</td>
+                <td className="p-2 font-bold text-green-700">${p.price ? p.price.toFixed(2) : 'Not Set'}</td>
+                <td className="p-2">
+                  <input
+                    type="number"
+                    placeholder="Set Price"
+                    className="border p-2 rounded w-full"
+                    value={priceUpdate.productId === p.id ? priceUpdate.price : ''}
+                    onChange={(e) => setPriceUpdate({ ...priceUpdate, productId: p.id, price: e.target.value })}
+                  />
+                </td>
+                <td className="p-2">
+                  <input
+                    type="number"
+                    placeholder="Discount %"
+                    className="border p-2 rounded w-full"
+                    value={priceUpdate.productId === p.id ? priceUpdate.discount : ''}
+                    onChange={(e) => setPriceUpdate({ ...priceUpdate, productId: p.id, discount: e.target.value })}
+                  />
+                </td>
+                <td className="p-2 flex gap-2">
+                  <button
+                    onClick={applyPriceUpdate}
+                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={applyDiscountUpdate}
+                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                  >
+                    Discount
+                  </button>
+                  <button
+                    onClick={() => removeDiscount(p.id)}
+                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -124,6 +124,24 @@ public class AdminProductController {
 
         return ResponseEntity.ok("Price set and product approved");
     }
+    @PutMapping("/admin/products/{productId}/approve")
+    public ResponseEntity<?> approveProduct(@PathVariable Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isPresent()) {
+            Product updatedProduct = product.get();
+            updatedProduct.setApprovedBySales(true);
+            productRepository.save(updatedProduct);
+            return ResponseEntity.ok("Product approved successfully.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
+    }
+    @PutMapping("/admin/products/{id}/price")
+    public ResponseEntity<?> updateProductPrice(@PathVariable Long id, @RequestBody Map<String, Double> payload) {
+        double newPrice = payload.get("price");
+        // Update logic here
+        return ResponseEntity.ok("Price updated successfully");
+    }
+
 
     @PutMapping("/{id}/remove-discount")
     @PreAuthorize("hasRole('SALES_MANAGER')")

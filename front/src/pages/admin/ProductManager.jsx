@@ -50,8 +50,10 @@ export default function ProductManager() {
         name: typeof product.category === 'string'
           ? product.category.trim()
           : product.category?.name?.trim() || ""
-      }
+      },
+      price: null, // Set price to null initially
     };
+
 
     const req = preparedProduct.id
       ? axios.put(`/admin/products/${preparedProduct.id}`, preparedProduct, {
@@ -64,6 +66,7 @@ export default function ProductManager() {
     req.then(() => {
       load();
       setEditing(null);
+      alert("Product created. Please assign a price in the Pricing Manager.");
     }).catch(err => {
       console.error("Failed to save product:", err);
     });

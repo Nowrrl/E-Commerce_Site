@@ -6,7 +6,8 @@ const Register = () => {
     const [userData, setUserData] = useState({
         username: "",
         email: "",
-        password: ""
+        password: "",
+        taxId: ''
     });
 
     const [showModal, setShowModal] = useState(false);
@@ -96,6 +97,16 @@ const Register = () => {
                                 required
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
                             />
+                            <input
+                                type="text"
+                                name="taxId"
+                                placeholder="taxId"
+                                onChange={handleChange}
+                                required
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-white"
+                            />
+
+                            
 
                             {/* Show error message if exists */}
                             {errorMessage && (
