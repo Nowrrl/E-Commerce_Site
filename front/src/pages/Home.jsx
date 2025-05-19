@@ -101,7 +101,7 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
 
 const ProductCard = ({ product, isInWishlist, toggleWishlist }) => {
   // Calculate discount percentage
-  const discountPercentage = product.originalPrice
+  const discountPercentage = product.originalPrice && product.price < product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;
 
@@ -116,12 +116,11 @@ const ProductCard = ({ product, isInWishlist, toggleWishlist }) => {
         className="absolute top-4 right-6 z-10 focus:outline-none cursor-pointer"
       >
         <span
-          className={
-            "text-4xl leading-none transition-transform hover:scale-110 " +
-            (isInWishlist
+          className={`text-4xl leading-none transition-transform hover:scale-110 ${
+            isInWishlist
               ? "bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent"
-              : "text-gray-300")
-          }
+              : "text-gray-300"
+          }`}
         >
           {isInWishlist ? "♥" : "♡"}
         </span>
@@ -143,15 +142,17 @@ const ProductCard = ({ product, isInWishlist, toggleWishlist }) => {
         <h3 className="font-medium text-gray-800 text-md truncate">{product.name}</h3>
 
         {/* Price and Discount */}
-        {product.originalPrice && product.originalPrice > product.price ? (
+        {discountPercentage ? (
           <div className="flex items-center gap-2">
-            <span className="line-through text-sm text-gray-500">${product.originalPrice.toFixed(2)}</span>
-            <span className="text-red-600 font-bold text-lg">${product.price.toFixed(2)}</span>
-            {discountPercentage && (
-              <span className="text-green-600 font-semibold text-sm">
-                ({discountPercentage}% OFF)
-              </span>
-            )}
+            <span className="line-through text-sm text-gray-500">
+              ${product.originalPrice.toFixed(2)}
+            </span>
+            <span className="text-red-600 font-bold text-lg">
+              ${product.price.toFixed(2)}
+            </span>
+            <span className="text-green-600 font-semibold text-sm">
+              ({discountPercentage}% OFF)
+            </span>
           </div>
         ) : (
           <p className="text-red-500 font-bold text-lg">${product.price.toFixed(2)}</p>
@@ -170,19 +171,14 @@ const ProductCard = ({ product, isInWishlist, toggleWishlist }) => {
 
 
 
+
 const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) => {
   const [activeTab, setActiveTab] = useState("All Products");
   const [backendProducts, setBackendProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("name");
 
-  const tabs = [
-    "All Products",
-    "New",
-    "Used",
-    "Most Purchase",
-    "Sales",
-  ];
+  const tabs = ["All Products", "New", "Used", "Most Purchase", "Sales"];
 
   useEffect(() => {
     axios
@@ -195,7 +191,7 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
     .filter(p => p.approvedBySales) // only show approved products
     .filter((product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase()) // ✅ search by description too
+      product.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .filter((product) =>
       selectedCategory ? product.category.name === selectedCategory : true
@@ -204,7 +200,7 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
   const sorted = filtered.sort((a, b) => {
     if (sortBy === "priceAsc") return a.price - b.price;
     if (sortBy === "priceDesc") return b.price - a.price;
-    if (sortBy === "popularity") return b.soldCount - a.soldCount; // 👈 NEW LINE
+    if (sortBy === "popularity") return b.soldCount - a.soldCount;
     return a.name.localeCompare(b.name);
   });
 
@@ -215,10 +211,9 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`text-lg font-bold pb-2 transition ${activeTab === tab
-              ? "text-blue-600 border-b-2 border-blue-600"
-              : "text-gray-500"
-              }`}
+            className={`text-lg font-bold pb-2 transition ${
+              activeTab === tab ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"
+            }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab}
@@ -226,7 +221,6 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
         ))}
       </div>
 
-      {/* Only show backend products for All Products tab */}
       {activeTab === "All Products" ? (
         <>
           <div className="flex mt-4 space-x-4">
@@ -278,6 +272,7 @@ const ProductTabsSection = ({ selectedCategory, wishlistIds, toggleWishlist }) =
     </div>
   );
 };
+
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("");

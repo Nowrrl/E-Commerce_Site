@@ -16,12 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.example.cs308project.notification.notification_repository;
 import org.example.cs308project.wishlist.wishlist_repository;
 import org.example.cs308project.wishlist.wishlist_model;
+import org.springframework.http.HttpStatus;
 
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/admin/products")
@@ -39,6 +41,10 @@ public class AdminProductController {
 
     @Autowired
     private workers_repository workersRepository;
+
+    // Add this line to inject the product repository
+    @Autowired
+    private org.example.cs308project.products.product_repository productRepository;
 
     @GetMapping("/{id}")
     public Optional<product_model> getById(@PathVariable Long id) {
@@ -126,15 +132,18 @@ public class AdminProductController {
     }
     @PutMapping("/admin/products/{productId}/approve")
     public ResponseEntity<?> approveProduct(@PathVariable Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
+        Optional<product_model> product = productRepository.findById(productId);
         if (product.isPresent()) {
-            Product updatedProduct = product.get();
+            product_model updatedProduct = product.get();
             updatedProduct.setApprovedBySales(true);
             productRepository.save(updatedProduct);
             return ResponseEntity.ok("Product approved successfully.");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
     }
+
+
+
     @PutMapping("/admin/products/{id}/price")
     public ResponseEntity<?> updateProductPrice(@PathVariable Long id, @RequestBody Map<String, Double> payload) {
         double newPrice = payload.get("price");

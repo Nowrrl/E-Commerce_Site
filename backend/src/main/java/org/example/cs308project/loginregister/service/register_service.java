@@ -20,7 +20,22 @@ public class register_service {
     @Autowired
     private order_repository orderRepository;
 
-    
+    public register_model registerUser(String email, String username, String password) {
+        register_model newUser = new register_model();
+        newUser.setEmail(email);
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        registerRepository.save(newUser);
+
+        login_model loginUser = new login_model();
+        loginUser.setUsername(username);
+        loginUser.setPassword(password);
+
+        loginRepository.save(loginUser);
+
+        return newUser;
+    }
 
     public boolean userNameExists(String username) {
         return registerRepository.findByUsername(username) != null;

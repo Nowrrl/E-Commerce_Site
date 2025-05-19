@@ -15,7 +15,8 @@ export default function ProductManager() {
     quantity: 0,
     price: 0,
     warrantyStatus: '',
-    distributorInfo: ''
+    distributorInfo: '',
+    approvedBySales: false
   };
 
   const [products, setProducts] = useState([]);
@@ -43,7 +44,7 @@ export default function ProductManager() {
   function save(product) {
     const authHeader = localStorage.getItem("adminAuth");
 
-    // Wrap category as object
+    // Exclude price and approval status from being updated
     const preparedProduct = {
       ...product,
       category: {
@@ -51,9 +52,9 @@ export default function ProductManager() {
           ? product.category.trim()
           : product.category?.name?.trim() || ""
       },
-      price: null, // Set price to null initially
+      approvedBySales: product.approvedBySales ?? false,
+      price: product.price // Keep the existing price without allowing updates
     };
-
 
     const req = preparedProduct.id
       ? axios.put(`/admin/products/${preparedProduct.id}`, preparedProduct, {
@@ -66,12 +67,11 @@ export default function ProductManager() {
     req.then(() => {
       load();
       setEditing(null);
-      alert("Product created. Please assign a price in the Pricing Manager.");
+      alert("Product saved successfully.");
     }).catch(err => {
       console.error("Failed to save product:", err);
     });
   }
-
 
   function remove(id) {
     const authHeader = localStorage.getItem("adminAuth");
@@ -88,7 +88,7 @@ export default function ProductManager() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] p-8 text-white">
-      <h1 className="text-3xl font-bold mb-8">Product Management</h1>
+      <h1 className="text-3xl font-bold mb-8">🛒 Product Management</h1>
 
       <button
         className="mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -105,130 +105,39 @@ export default function ProductManager() {
           }}
           className="bg-white text-gray-800 rounded-2xl shadow-2xl p-8 mb-10 max-w-4xl mx-auto"
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">🛠️ {editing.id ? "Edit Product" : "Add New Product"}</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            {editing.id ? "✏️ Edit Product" : "🆕 Add New Product"}
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Name */}
-            <div>
-              <label className="block mb-1 text-gray-600">Name</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500"
-                value={editing.name}
-                onChange={e => setEditing({ ...editing, name: e.target.value })}
-                required
-              />
-            </div>
-
-            {/* Model */}
-            <div>
-              <label className="block mb-1 text-gray-600">Model</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-3"
-                value={editing.model}
-                onChange={e => setEditing({ ...editing, model: e.target.value })}
-                required
-              />
-            </div>
-
-            {/* Category */}
-            <div>
-              <label className="block mb-1 text-gray-600">Category</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-3"
-                value={editing.category?.name || ''}
-                onChange={e => setEditing({ ...editing, category: { name: e.target.value } })}
-                required
-              />
-            </div>
-
-            {/* Serial Number */}
-            <div>
-              <label className="block mb-1 text-gray-600">Serial Number</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-3"
-                value={editing.serialNumber}
-                onChange={e => setEditing({ ...editing, serialNumber: e.target.value })}
-                required
-              />
-            </div>
-
-            {/* Image URL */}
-            <div className="col-span-2">
-              <label className="block mb-1 text-gray-600">Image URL</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-3"
-                value={editing.imageUrl}
-                onChange={e => setEditing({ ...editing, imageUrl: e.target.value })}
-              />
-            </div>
-
-            {/* Description */}
-            <div className="col-span-2">
-              <label className="block mb-1 text-gray-600">Description</label>
-              <textarea
-                className="w-full border border-gray-300 rounded-lg p-3"
-                rows={3}
-                value={editing.description}
-                onChange={e => setEditing({ ...editing, description: e.target.value })}
-              />
-            </div>
-
-            {/* Quantity */}
-            <div>
-              <label className="block mb-1 text-gray-600">Quantity in Stock</label>
-              <input
-                type="number"
-                className="w-full border border-gray-300 rounded-lg p-3"
-                min={0}
-                value={isNaN(editing.quantity) ? '' : editing.quantity}
-                onChange={e => {
-                  const value = e.target.value;
-                  setEditing({ ...editing, quantity: value === '' ? '' : parseInt(value, 10) });
-                }}
-                required
-              />
-            </div>
-
-            {/* Warranty */}
-            <div>
-              <label className="block mb-1 text-gray-600">Warranty Status</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-3"
-                value={editing.warrantyStatus}
-                onChange={e => setEditing({ ...editing, warrantyStatus: e.target.value })}
-              />
-            </div>
-
-            {/* Distributor Info */}
-            <div className="col-span-2">
-              <label className="block mb-1 text-gray-600">Distributor Info</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-3"
-                value={editing.distributorInfo}
-                onChange={e => setEditing({ ...editing, distributorInfo: e.target.value })}
-              />
-            </div>
+            {Object.keys(emptyProduct).map((key) => (
+              <div key={key}>
+                <label className="block mb-1 text-gray-600 capitalize">
+                  {key.replace(/([A-Z])/g, ' $1')}
+                </label>
+                <input
+                  type="text"
+                  className="w-full border border-gray-300 rounded-lg p-3"
+                  value={editing[key] || ''}
+                  onChange={e => setEditing({ ...editing, [key]: e.target.value })}
+                  disabled={key === 'price' || key === 'approvedBySales'} // Restrict editing
+                  readOnly={key === 'price' || key === 'approvedBySales'} // Display as read-only
+                />
+              </div>
+            ))}
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-end gap-4 mt-6">
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
             >
               Save
             </button>
             <button
               type="button"
               onClick={() => setEditing(null)}
-              className="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg font-semibold"
+              className="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg"
             >
               Cancel
             </button>
@@ -236,38 +145,40 @@ export default function ProductManager() {
         </form>
       )}
 
-      {/* Table */}
-      <div className="overflow-x-auto bg-white text-gray-800 rounded-2xl shadow-2xl p-8">
-        <table className="w-full table-auto">
+      <div className="bg-white text-gray-800 rounded-2xl shadow-2xl p-8">
+        <h2 className="text-lg font-bold mb-4">📦 Product List</h2>
+        <table className="w-full table-auto border">
           <thead>
-            <tr className="bg-gray-100">
-              {['ID', 'Name', 'Model', 'Category', 'Stock', 'Price', 'Actions'].map(h => (
-                <th key={h} className="text-left text-gray-600 font-semibold p-3">{h}</th>
+            <tr className="bg-purple-100">
+              {['ID', 'Name', 'Model', 'Category', 'Serial Number',  'Quantity', 'Price', 'Warranty Status', 'Distributor Info', 'Approval Status', 'Actions'].map(h => (
+                <th key={h} className="p-2">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {products.map(p => (
-              <tr key={p.id} className="border-t hover:bg-gray-50">
-                <td className="p-3">{p.id}</td>
-                <td className="p-3">{p.name}</td>
-                <td className="p-3">{p.model}</td>
-                <td className="p-3">{p.categoryName || "—"}</td>
-                <td className="p-3">{p.quantity}</td>
-                <td className="p-3">${p.price.toFixed(2)}</td>
-                <td className="p-3 flex gap-2">
+              <tr key={p.id} className="border-t">
+                <td className="p-2">{p.id}</td>
+                <td className="p-2">{p.name}</td>
+                <td className="p-2">{p.model}</td>
+                <td className="p-2">{p.categoryName || "—"}</td>
+                <td className="p-2">{p.serialNumber}</td>
+                
+                <td className="p-2">{p.quantity}</td>
+                <td className="p-2">${p.price.toFixed(2)}</td>
+                <td className="p-2">{p.warrantyStatus}</td>
+                <td className="p-2">{p.distributorInfo}</td>
+                <td className="p-2">{p.approvedBySales ? "✅ Yes" : "❌ No"}</td>
+                <td className="p-2 flex gap-2">
                   <button
-                    onClick={() => setEditing({
-                      ...p,
-                      category: { name: p.categoryName || '' }
-                    })}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded"
+                    onClick={() => setEditing({ ...p, category: { name: p.categoryName || '' } })}
+                    className="text-sm bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => remove(p.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                    className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                   >
                     Delete
                   </button>
@@ -278,6 +189,5 @@ export default function ProductManager() {
         </table>
       </div>
     </div>
-
   );
 }
