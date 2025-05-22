@@ -36,7 +36,7 @@ export default function Reports() {
                 type="date"
                 value={range.from}
                 onChange={(e) => setRange({ ...range, from: e.target.value })}
-                className="border p-2 rounded "
+                className="border p-2 rounded"
             />
           </div>
           <div>
@@ -50,7 +50,7 @@ export default function Reports() {
           </div>
           <button
               onClick={fetchReport}
-              className="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
+              className="px-4 py-2 bg-blue-600 text-white rounded"
           >
             Run
           </button>

@@ -1,0 +1,22 @@
+server {
+    listen       80;
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    # 👉 Always serve index.html for React Router
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Serve static assets directly
+    location /assets/ {
+        try_files $uri =404;
+    }
+
+    # Images, etc.
+    location /products_images/ {
+        try_files $uri =404;
+    }
+}
