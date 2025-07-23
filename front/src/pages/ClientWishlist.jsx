@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import {
     fetchWishlist,
     removeFromWishlist,
-} from "../redux/wishlistSLice";
+} from "../redux/wishlistSlice";
 
 const ClientWishlist = () => {
     const dispatch   = useDispatch();
