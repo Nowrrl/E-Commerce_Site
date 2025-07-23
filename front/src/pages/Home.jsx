@@ -8,7 +8,7 @@ import {
   fetchWishlist,
   addToWishlist,
   removeFromWishlist,
-} from "../redux/wishlistSLice";
+} from "../redux/wishlistSlice";
 
 
 
