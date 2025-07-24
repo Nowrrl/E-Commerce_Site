@@ -1,20 +1,26 @@
-# Use official Maven image with Java 17
-FROM maven:3.8.6-openjdk-17-slim
+# Use Maven with JDK 17 (official image)
+FROM maven:3.8.6-eclipse-temurin-17 as builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy everything
+# Copy source code
 COPY . .
 
-# Grant permission
-RUN chmod +x mvnw
+# Build the application (skip tests)
+RUN mvn clean package -DskipTests
 
-# Build the project (skip tests)
-RUN ./mvnw package -DskipTests
+# Use a lightweight runtime image for running the jar
+FROM eclipse-temurin:17-jre-alpine
 
-# Expose port
+# Set working directory
+WORKDIR /app
+
+# Copy the built jar file from the builder stage
+COPY --from=builder /app/target/CS308Project-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port (your app uses 8085)
 EXPOSE 8085
 
-# Run the Spring Boot app
-CMD ["./mvnw", "spring-boot:run"]
+# Run the application
+CMD ["java", "-jar", "app.jar"]
