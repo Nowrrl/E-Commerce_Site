@@ -1,11 +1,12 @@
 # Build Stage
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Build stage
+FROM maven:3.9.6-openjdk-17-slim AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Run Stage
-FROM eclipse-temurin:17-jdk
+# Run stage
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 # Copy the built jar file from the builder stage
 COPY --from=builder /app/target/CS308Project-0.0.1-SNAPSHOT.jar app.jar
